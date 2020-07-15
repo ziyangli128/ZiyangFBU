@@ -57,7 +57,7 @@ public class ProfileFragment extends PostsFragment {
         tvUsername = view.findViewById(R.id.tvUsername);
 
         StaggeredGridLayoutManager layoutManager =
-                new StaggeredGridLayoutManager(R.dimen.span_count, 1);
+                new StaggeredGridLayoutManager(SPAN_COUNT, 1);
         rvPosts.setLayoutManager(layoutManager);
 
         tvUsername.setText(user.getUsername());

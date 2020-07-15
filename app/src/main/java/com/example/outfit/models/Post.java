@@ -18,6 +18,7 @@ public class Post extends ParseObject {
     public static final String KEY_AUTHOR = "author";
     public static final String KEY_CREATED_AT = "createdAt";
     public static final String KEY_LIKES = "likes";
+    public static final String KEY_FAVORITES = "favorites";
     public static final String KEY_COMMENTS= "comments";
     public static final String KEY_TAGS= "tags";
 
@@ -79,5 +80,17 @@ public class Post extends ParseObject {
 
     public void setTags(String tag) {
         add(KEY_TAGS, tag);
+    }
+
+    public ArrayList getFavorites() {
+        return (ArrayList) get(KEY_FAVORITES);
+    }
+
+    public void setFavorites(String userId) {
+        add(KEY_FAVORITES, userId);
+    }
+
+    public void removeFavorites(String userId) {
+        removeAll(KEY_FAVORITES, Collections.singleton(userId));
     }
 }

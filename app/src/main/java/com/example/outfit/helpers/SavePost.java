@@ -27,6 +27,7 @@ public class SavePost extends ComposeFragment {
         post.setImage(new ParseFile(photoFile));
         post.setAuthor(currentUser);
         post.setLikes("default");
+        post.setFavorites("default");
         post.setTags("casual");
         post.saveInBackground(new SaveCallback() {
             @Override

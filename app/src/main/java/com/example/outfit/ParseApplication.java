@@ -3,8 +3,10 @@ package com.example.outfit;
 import android.app.Application;
 
 import com.example.outfit.models.Post;
+import com.example.outfit.models.User;
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import org.w3c.dom.Comment;
 
@@ -18,6 +20,7 @@ public class ParseApplication extends Application {
 
         // Register the parse models
         ParseObject.registerSubclass(Post.class);
+        ParseObject.registerSubclass(User.class);
 //        ParseObject.registerSubclass(Comment.class);
 
         // set applicationId, and server server based on the values in the Heroku settings.

@@ -1,7 +1,10 @@
 package com.example.outfit.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,20 +17,28 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.outfit.activities.DetailActivity;
 import com.example.outfit.helpers.ClickListener;
 import com.example.outfit.R;
+import com.example.outfit.helpers.OnIntentReceived;
 import com.example.outfit.models.Post;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
+import org.parceler.Parcel;
+import org.parceler.Parcels;
+
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
     public static final String TAG = "PostsAdapter";
-    public static final int CORNER_RADIUS = 30; // corner radius, higher value = more rounded
+    private final int REQUEST_CODE = 20;
+    public static final int CORNER_RADIUS = 150; // corner radius, higher value = more rounded
     public static final int CROP_MARGIN = 10; // crop margin, set to 0 for corners with no crop
 
     private Context context;
@@ -116,7 +127,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         @Override
         public void onClick(View view) {
-            Log.i(TAG, "onClick: ");
+            Log.i(TAG, "onClick: " + TAG);
+            // gets item position
+            int position = getAdapterPosition();
+            // make sure the position is valid, i.e. actually exists in the view
+            if (position != RecyclerView.NO_POSITION) {
+                // get the post clicked on
+                Post post = posts.get(position);
+                Intent i = new Intent(context, DetailActivity.class);
+                // serialize the movie using parceler, use its short name as a key
+                i.putExtra("post", Parcels.wrap(post));
+                ((Activity) context).startActivityForResult(i, REQUEST_CODE);
+            }
         }
     }
 }
