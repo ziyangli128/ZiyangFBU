@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Outfit</string>
+
+    <string name="login">Log in</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="signup_email">Email address</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="log_out">Log out</string>
+
+    <string name="login_success_toast">Login Success!</string>
+    <string name="login_fail_toast">Please enter valid username and password!</string>
+    <string name="signup_success_toast">Sign up Success! Try to login now!</string>
+    <string name="signup_fail_toast">Sign up failed! Please enter valid information!</string>
+
+    <string name="title_hint">Title...</string>
+    <string name="description_hint">Description...</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="submit_post">Submit</string>
+    <string name="title_empty">Title cannot be empty!</string>
+    <string name="image_empty">Please uplaod an image!</string>
+    <string name="picture_not_taken">Picture wasn\'t taken!</string>
+    <string name="error_saving">Error while saving!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
