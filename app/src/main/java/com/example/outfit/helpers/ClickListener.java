@@ -1,6 +1,5 @@
 package com.example.outfit.helpers;
 
-import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,16 +12,13 @@ import com.example.outfit.activities.MainActivity;
 import com.example.outfit.fragments.MyProfileFragment;
 import com.example.outfit.fragments.ProfileFragment;
 import com.example.outfit.models.Post;
-import com.example.outfit.models.User;
-import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.Collections;
 
 public class ClickListener {
 
-    public static final String KEY_FAVORITES = "favorites";
+    public static final String KEY_FAVORITES = "collection";
 
     public static void setIvLikeClickListener(final Post post, final ImageView ivLike, final String TAG) {
         ivLike.setOnClickListener(new View.OnClickListener() {
@@ -72,24 +68,14 @@ public class ClickListener {
                 if (post.getFavorites().contains(ParseUser.getCurrentUser().getObjectId())) {
                     post.removeFavorites(ParseUser.getCurrentUser().getObjectId());
                     post.saveInBackground();
-//                    currentUser.removeAll(KEY_FAVORITES, Collections.singleton(post.getObjectId()));
-//                    currentUser.saveInBackground();
+                    currentUser.removeAll(KEY_FAVORITES, Collections.singleton(post.getObjectId()));
+                    currentUser.saveInBackground();
                     ivFavorite.setSelected(false);
                 } else {
-//                    currentUser.add("favorites", post.getObjectId());
-//                    currentUser.saveInBackground(new SaveCallback() {
-//                        @Override
-//                        public void done(ParseException e) {
-//                            if (e != null) {
-//                                Log.e(TAG, "done: favorite", e);
-//                            }
-//                        }
-//                    });
+                    currentUser.add(KEY_FAVORITES, post.getObjectId());
+                    currentUser.saveInBackground();
                     post.setFavorites(ParseUser.getCurrentUser().getObjectId());
                     post.saveInBackground();
-
-//                    currentUser.setFavorites(post.getObjectId());
-//                    currentUser.saveInBackground();
                     ivFavorite.setSelected(true);
                 }
             }
