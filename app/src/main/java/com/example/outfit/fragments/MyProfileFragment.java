@@ -19,8 +19,11 @@ import com.bumptech.glide.Glide;
 import com.example.outfit.R;
 import com.example.outfit.activities.LoginActivity;
 import com.example.outfit.helpers.QueryPosts;
+import com.example.outfit.models.Author;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -49,7 +52,6 @@ public class MyProfileFragment extends ProfileFragment {
 
         //adapter = new PostsAdapter(getContext(), posts);
         rvPosts.setAdapter(adapter);
-        Log.i(TAG, "onViewCreated: " + rvPosts.toString());
 
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(SPAN_COUNT, 1);
@@ -88,7 +90,7 @@ public class MyProfileFragment extends ProfileFragment {
 
     @Override
     public void queryMyPosts() {
-        QueryPosts.queryPosts(user);
+        QueryPosts.queryPosts((Author) user.getParseObject("author"));
     }
 
 }

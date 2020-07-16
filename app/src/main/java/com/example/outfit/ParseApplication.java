@@ -2,9 +2,11 @@ package com.example.outfit;
 
 import android.app.Application;
 
+import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 public class ParseApplication extends Application {
     @Override
@@ -13,7 +15,7 @@ public class ParseApplication extends Application {
 
         // Register the parse models
         ParseObject.registerSubclass(Post.class);
-//        ParseObject.registerSubclass(Comment.class);
+        ParseObject.registerSubclass(Author.class);
 
         // set applicationId, and server server based on the values in the Heroku settings.
         // clientKey is not needed unless explicitly configured

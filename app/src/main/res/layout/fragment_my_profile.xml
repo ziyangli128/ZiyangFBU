@@ -31,28 +31,67 @@
                 android:layout_toRightOf="@id/ivProfileImage"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvFollowings"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:text="Followings"
-                    android:textColor="#000000" />
+                    android:orientation="vertical"
+                    android:layout_marginRight="20dp">
 
-                <TextView
-                    android:id="@+id/tvFollowers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:text="Followers"
-                    android:textColor="#000000" />
+                    <TextView
+                        android:id="@+id/tvFollowings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Followings"
+                        android:textColor="#000000" />
 
-                <TextView
-                    android:id="@+id/tvFavorites"
+                    <TextView
+                        android:id="@+id/tvFollowingNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="0" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Favorites"
-                    android:textColor="#000000" />
+                    android:orientation="vertical"
+                    android:layout_marginRight="20dp">
+
+                    <TextView
+                        android:id="@+id/tvFollowers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Followers"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/tvFollowerNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="0" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvFavorites"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Favorites"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/tvFavoritesNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="0" />
+                </LinearLayout>
             </LinearLayout>
 
             <Button
@@ -61,7 +100,7 @@
                 android:layout_height="40dp"
                 android:layout_below="@id/llFollowings"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="60dp"
                 android:layout_toRightOf="@id/ivProfileImage"
                 android:text="@string/log_out"
                 android:textAlignment="center"

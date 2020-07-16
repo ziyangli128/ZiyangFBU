@@ -82,7 +82,7 @@ public class PostsFragment extends BaseFragment {
 //                android.R.color.holo_orange_light,
 //                android.R.color.holo_red_light);
 
-//        queryMyPosts();
+        queryMyPosts();
 
 //        // Retain an instance to call `resetState()` for fresh searches
 //        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {

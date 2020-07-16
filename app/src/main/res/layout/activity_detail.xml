@@ -37,7 +37,7 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Follow" />
+            android:text="@string/follow" />
 
     </androidx.appcompat.widget.Toolbar>
 

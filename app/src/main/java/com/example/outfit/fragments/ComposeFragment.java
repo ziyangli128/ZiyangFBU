@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.example.outfit.R;
 import com.example.outfit.helpers.SavePost;
 import com.example.outfit.databinding.FragmentComposeBinding;
+import com.example.outfit.models.Author;
 import com.parse.ParseUser;
 
 import java.io.File;
@@ -82,7 +83,7 @@ public class ComposeFragment extends Fragment {
                             R.string.image_empty, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                ParseUser currentUser = ParseUser.getCurrentUser();
+                Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
                 SavePost.savePost(description, title, currentUser, photoFile, getContext(), getActivity());
             }
         });

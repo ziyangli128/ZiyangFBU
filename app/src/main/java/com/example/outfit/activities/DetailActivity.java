@@ -14,11 +14,16 @@ import com.example.outfit.adapters.PostsAdapter;
 import com.example.outfit.databinding.ActivityDetailBinding;
 import com.example.outfit.databinding.ActivityMainBinding;
 import com.example.outfit.helpers.ClickListener;
+import com.example.outfit.helpers.QueryPosts;
+import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
+
+import java.util.ArrayList;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -28,6 +33,8 @@ public class DetailActivity extends AppCompatActivity{
     ActivityDetailBinding binding;
     public static final int CORNER_RADIUS = 150; // corner radius, higher value = more rounded
     public static final int CROP_MARGIN = 10; // crop margin, set to 0 for corners with no crop
+    public static final String KEY_FOLLOWERS = "followers";
+    public static final String KEY_FOLLOWINGS = "followings";
 
     Post post;
     Context context;
@@ -47,35 +54,39 @@ public class DetailActivity extends AppCompatActivity{
         bindTopToolBar();
         bindBottomToolBar();
         bindBody();
-
-//        if (onStop()) {
-//            Log.i(TAG, "onCreate: finishing");
-
-//        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy: finishing");
-        // Prepare data intent
-        Intent i = new Intent();
-        // Pass tweet back as result
-        i.putExtra("post", Parcels.wrap(post));
-        // Set result code and bundle data for response
-        setResult(RESULT_OK, i);
+        QueryPosts.queryPosts(null);
     }
 
     public void bindTopToolBar() {
-        binding.tvUsername.setText(post.getAuthor().getUsername());
+        binding.tvUsername.setText(post.getAuthorUsername());
 
-        ParseFile profileImage = post.getAuthor().getParseFile("profileImage");
+        ParseUser user = post.getAuthor().getParseUser("user");
+        ParseFile profileImage = null;
+        try {
+            profileImage = user.fetchIfNeeded().getParseFile("profileImage");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         if (profileImage != null) {
             Glide.with(this).load(profileImage.getUrl())
                     .transform(new RoundedCornersTransformation(CORNER_RADIUS, CROP_MARGIN)).into(binding.ivProfileImage);
         }
 
+        ArrayList followers = ((ArrayList) post.getAuthor().get(KEY_FOLLOWERS));
+        if (followers != null && followers.contains(ParseUser.getCurrentUser().getParseObject("author").getObjectId())) {
+            binding.btnFollow.setText(R.string.unfollow);
+        } else {
+            binding.btnFollow.setText(R.string.follow);
+        }
+
         ClickListener.setIvProfileClickListener(post, binding.ivProfileImage, TAG);
+        ClickListener.setbtnFollowClickListener(post, binding.btnFollow, TAG);
     }
 
     public void bindBottomToolBar() {
@@ -90,6 +101,7 @@ public class DetailActivity extends AppCompatActivity{
         } else {
             binding.ivFavorite.setSelected(false);
         }
+
         ClickListener.setIvLikeClickListener(post, binding.ivLike, TAG);
         ClickListener.setIvFavoriteClickListener(post, binding.ivFavorite, TAG);
     }

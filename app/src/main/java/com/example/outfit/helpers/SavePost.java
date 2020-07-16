@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.outfit.R;
 import com.example.outfit.fragments.ComposeFragment;
+import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -19,7 +20,7 @@ import java.io.File;
 
 public class SavePost extends ComposeFragment {
     public static void savePost(final String description, String title,
-                                ParseUser currentUser, File photoFile, final Context context,
+                                Author currentUser, File photoFile, final Context context,
                                 final FragmentActivity activity) {
         Post post = new Post();
         post.setTitle(title);

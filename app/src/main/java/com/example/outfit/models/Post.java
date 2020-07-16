@@ -21,6 +21,7 @@ public class Post extends ParseObject {
     public static final String KEY_FAVORITES = "favorites";
     public static final String KEY_COMMENTS= "comments";
     public static final String KEY_TAGS= "tags";
+    public static final String KEY_USERNAME= "username";
 
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
@@ -46,12 +47,16 @@ public class Post extends ParseObject {
         put(KEY_IMAGE, parseFile);
     }
 
-    public ParseUser getAuthor() {
-        return getParseUser(KEY_AUTHOR);
+    public ParseObject getAuthor() {
+        return getParseObject(KEY_AUTHOR);
     }
 
-    public void setAuthor(ParseUser user) {
-        put(KEY_AUTHOR, user);
+    public String getAuthorUsername() {
+        return getAuthor().get(KEY_USERNAME).toString();
+    }
+
+    public void setAuthor(ParseObject author) {
+        put(KEY_AUTHOR, author);
     }
 
     public ArrayList getLikes() {

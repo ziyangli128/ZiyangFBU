@@ -21,13 +21,16 @@ import com.example.outfit.activities.DetailActivity;
 import com.example.outfit.helpers.ClickListener;
 import com.example.outfit.R;
 import com.example.outfit.helpers.OnIntentReceived;
+import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import org.parceler.Parcel;
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -102,14 +105,20 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public void bind(final Post post) {
             // Bind the post data to the view elements
             tvTitle.setText(post.getTitle());
-            tvUsername.setText(post.getAuthor().getUsername());
+            tvUsername.setText(post.getAuthorUsername());
 
             ParseFile image = post.getImage();
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
             }
 
-            ParseFile profileImage = post.getAuthor().getParseFile("profileImage");
+            ParseUser user = post.getAuthor().getParseUser("user");
+            ParseFile profileImage = null;
+            try {
+                profileImage = user.fetchIfNeeded().getParseFile("profileImage");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             if (profileImage != null) {
                 Glide.with(context).load(profileImage.getUrl())
                         .transform(new RoundedCornersTransformation(CORNER_RADIUS, CROP_MARGIN)).into(ivProfile);
