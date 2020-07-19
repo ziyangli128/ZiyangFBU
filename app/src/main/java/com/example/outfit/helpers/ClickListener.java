@@ -1,10 +1,13 @@
 package com.example.outfit.helpers;
 
+import android.app.Activity;
+import android.app.Application;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -14,10 +17,7 @@ import com.example.outfit.fragments.MyProfileFragment;
 import com.example.outfit.fragments.ProfileFragment;
 import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
-import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,12 +51,12 @@ public class ClickListener {
         ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity activity = (MainActivity) view.getContext();
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
                 Fragment fragment;
                 if (post.getAuthor() == ParseUser.getCurrentUser()) {
                     fragment = new MyProfileFragment();
                 } else {
-                    fragment = new ProfileFragment(post.getAuthor().getParseUser("user"));
+                    fragment = new ProfileFragment((Author) post.getAuthor());
                 }
                 FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.flContainer, fragment);
@@ -90,44 +90,27 @@ public class ClickListener {
         });
     }
 
-    public static void setbtnFollowClickListener(final Post post, final Button btnfollow, final String TAG) {
+    public static void setbtnFollowClickListener(final Author author, final Button btnfollow, final String TAG) {
         btnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
-                Author author = (Author) post.getAuthor();
+                //Author author = (Author) post.getAuthor();
                 ArrayList followers = ((ArrayList) author.get(KEY_FOLLOWERS));
                 Log.i(TAG, "onClick: follow this post author");
                 if (followers != null && followers.contains(currentUser.getObjectId())) {
-                    currentUser.removeAll(KEY_FOLLOWINGS, Collections.singleton(post.getAuthor().getObjectId()));
+                    currentUser.removeAll(KEY_FOLLOWINGS, Collections.singleton(author.getObjectId()));
                     currentUser.saveInBackground();
 
                     author.removeAll(KEY_FOLLOWERS, Collections.singleton(currentUser.getObjectId()));
-                    author.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e != null) {
-                                Log.e(TAG, "done: error", e);
-                            }
-                            Log.i(TAG, "done: ");
-                        }
-                    });
+                    author.saveInBackground();
                     btnfollow.setText(R.string.follow);
                 } else {
-                    currentUser.add(KEY_FOLLOWINGS, post.getAuthor().getObjectId());
+                    currentUser.add(KEY_FOLLOWINGS, author.getObjectId());
                     currentUser.saveInBackground();
-                    Log.i(TAG, "onClick: " + post.getAuthorUsername());
-                    Log.i(TAG, "onClick: " + currentUser.getObjectId());
+                    Log.i(TAG, "onClick: " + author.getUsername());
                     author.add(KEY_FOLLOWERS, currentUser.getObjectId());
-                    author.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e != null) {
-                                Log.e(TAG, "done: error", e);
-                            }
-                            Log.i(TAG, "done: ");
-                        }
-                    });
+                    author.saveInBackground();
                     btnfollow.setText(R.string.unfollow);
                 }
             }

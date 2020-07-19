@@ -49,18 +49,20 @@ public class DetailActivity extends AppCompatActivity{
 
         // unwrap the post passed in via intent
         post = (Post) Parcels.unwrap(getIntent().getParcelableExtra("post"));
+        int position = getIntent().getIntExtra("position", 0);
         Log.d("DetailActivity", String.format("Showing details for '%s'", post.getTitle()));
 
         bindTopToolBar();
         bindBottomToolBar();
         bindBody();
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "onDestroy: finishing");
-        QueryPosts.queryPosts(null);
+        // Prepare data intent
+        Intent i = new Intent();
+        // Pass tweet back as result
+        i.putExtra("post", Parcels.wrap(post));
+        i.putExtra("position", position);
+        // Set result code and bundle data for response
+        setResult(RESULT_OK, i);
     }
 
     public void bindTopToolBar() {
@@ -85,8 +87,8 @@ public class DetailActivity extends AppCompatActivity{
             binding.btnFollow.setText(R.string.follow);
         }
 
-        ClickListener.setIvProfileClickListener(post, binding.ivProfileImage, TAG);
-        ClickListener.setbtnFollowClickListener(post, binding.btnFollow, TAG);
+        //ClickListener.setIvProfileClickListener(post, binding.ivProfileImage, TAG);
+        ClickListener.setbtnFollowClickListener((Author) post.getAuthor(), binding.btnFollow, TAG);
     }
 
     public void bindBottomToolBar() {

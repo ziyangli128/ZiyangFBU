@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,20 +19,15 @@ import com.bumptech.glide.Glide;
 import com.example.outfit.activities.DetailActivity;
 import com.example.outfit.helpers.ClickListener;
 import com.example.outfit.R;
-import com.example.outfit.helpers.OnIntentReceived;
-import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-import org.parceler.Parcel;
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -112,13 +106,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 Glide.with(context).load(image.getUrl()).into(ivImage);
             }
 
-            ParseUser user = post.getAuthor().getParseUser("user");
-            ParseFile profileImage = null;
-            try {
-                profileImage = user.fetchIfNeeded().getParseFile("profileImage");
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            ParseObject author = post.getAuthor();
+            ParseFile profileImage = author.getParseFile("profileImage");
             if (profileImage != null) {
                 Glide.with(context).load(profileImage.getUrl())
                         .transform(new RoundedCornersTransformation(CORNER_RADIUS, CROP_MARGIN)).into(ivProfile);
@@ -146,6 +135,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 Intent i = new Intent(context, DetailActivity.class);
                 // serialize the movie using parceler, use its short name as a key
                 i.putExtra("post", Parcels.wrap(post));
+                i.putExtra("position", position);
                 ((Activity) context).startActivityForResult(i, REQUEST_CODE);
             }
         }

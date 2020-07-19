@@ -12,20 +12,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.bumptech.glide.Glide;
 import com.example.outfit.R;
 import com.example.outfit.activities.LoginActivity;
-import com.example.outfit.helpers.QueryPosts;
 import com.example.outfit.models.Author;
-import com.parse.ParseFile;
+import com.parse.ParseException;
 import com.parse.ParseUser;
-
-import java.util.ArrayList;
-
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,7 +28,11 @@ public class MyProfileFragment extends ProfileFragment {
     Button btnLogout;
 
     public MyProfileFragment() {
-        user = ParseUser.getCurrentUser();
+        try {
+            author = (Author) ParseUser.getCurrentUser().getParseObject("author").fetchIfNeeded();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -49,21 +45,6 @@ public class MyProfileFragment extends ProfileFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        //adapter = new PostsAdapter(getContext(), posts);
-        rvPosts.setAdapter(adapter);
-
-        StaggeredGridLayoutManager layoutManager =
-                new StaggeredGridLayoutManager(SPAN_COUNT, 1);
-        rvPosts.setLayoutManager(layoutManager);
-
-        ParseFile profileImage = user.getParseFile("profileImage");
-        if (profileImage != null) {
-            Glide.with(this).load(profileImage.getUrl())
-                    .transform(new RoundedCornersTransformation(CORNER_RADIUS, CROP_MARGIN)).into(ivProfileImage);
-        }
-
-        tvUsername.setText(user.getUsername());
 
         btnLogout = view.findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -87,10 +68,4 @@ public class MyProfileFragment extends ProfileFragment {
         getActivity().finish();
         startActivity(i);
     }
-
-    @Override
-    public void queryMyPosts() {
-        QueryPosts.queryPosts((Author) user.getParseObject("author"));
-    }
-
 }

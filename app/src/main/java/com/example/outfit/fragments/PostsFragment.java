@@ -10,22 +10,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.outfit.helpers.EndlessRecyclerViewScrollListener;
 import com.example.outfit.helpers.QueryPosts;
 import com.example.outfit.R;
 import com.example.outfit.adapters.PostsAdapter;
-import com.example.outfit.databinding.FragmentPostsBinding;
-import com.example.outfit.models.Post;
-
-import org.parceler.Parcels;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -36,6 +28,7 @@ import static android.app.Activity.RESULT_OK;
 public class PostsFragment extends BaseFragment {
 
     public static final String TAG = "PostsFragment";
+    private TabLayout tabTimeline;
 
 //    protected static PostsAdapter adapter;
 //    protected List<Post> posts;
@@ -66,6 +59,51 @@ public class PostsFragment extends BaseFragment {
                 new StaggeredGridLayoutManager(SPAN_COUNT, 1);
         rvPosts.setLayoutManager(layoutManager);
 
+        tabTimeline = view.findViewById(R.id.tabTimeline);
+
+        queryMyPosts();
+        tabTimeline.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                    default:
+                        queryMyPosts();
+                        break;
+                    case 1:
+                        queryTrendingPosts();
+                        break;
+                    case 2:
+                        queryNearbyPosts();
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                    default:
+                        adapter.clear();
+                        break;
+                    case 1:
+                        adapter.clear();
+                        break;
+                    case 2:
+                        adapter.clear();
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        // set default selection view
+
+
+
 //        // Lookup the swipe container view
 //        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
 //        // Setup refresh listener which triggers new data loading
@@ -82,7 +120,9 @@ public class PostsFragment extends BaseFragment {
 //                android.R.color.holo_orange_light,
 //                android.R.color.holo_red_light);
 
-        queryMyPosts();
+
+
+        //queryMyPosts();
 
 //        // Retain an instance to call `resetState()` for fresh searches
 //        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
@@ -101,22 +141,15 @@ public class PostsFragment extends BaseFragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        //Log.i(TAG, "onActivityResult: " + resultCode);
-        if (resultCode == RESULT_OK) {
-            // Get data from the Intent (tweet)
-            //Post post = Parcels.unwrap(data.getParcelableExtra("post"));
-            // Update the Recycler View with the new tweet
-            // Modify data source of tweets
-            Log.i(TAG, "onActivityResult: finished");
-            // Update the adapter
-            
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public void queryMyPosts() {
         QueryPosts.queryPosts(null);
+    }
+
+    public void queryTrendingPosts() {
+
+    }
+
+    public void queryNearbyPosts() {
+
     }
 }

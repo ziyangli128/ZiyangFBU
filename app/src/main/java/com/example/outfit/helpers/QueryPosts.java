@@ -1,9 +1,15 @@
 package com.example.outfit.helpers;
 
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Adapter;
 
+import androidx.annotation.AnyThread;
+import androidx.annotation.BinderThread;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.outfit.fragments.PostsFragment;
 import com.example.outfit.models.Author;
@@ -22,38 +28,47 @@ public class QueryPosts extends PostsFragment {
     public static final int LIMIT = 20;
 
     // query posts from the parse database
-    public static void queryPosts(@Nullable Author author) {
-        // specify the class to query
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        query.include(Post.KEY_AUTHOR);
-        query.setLimit(LIMIT);
-        query.addDescendingOrder(Post.KEY_CREATED_AT);
-        if (author != null) {
-            query.whereEqualTo(Post.KEY_AUTHOR, author);
-        }
+    // assertion
+    // annotate with background thread
 
-        query.findInBackground(new FindCallback<Post>() {
+    public static void queryPosts(@Nullable final Author author) {
+
+        new Thread(new Runnable() {
             @Override
-            public void done(List<Post> posts, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting posts.", e);
-                    return;
+            public void run() {
+                // specify the class to query
+                ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+                query.include(Post.KEY_AUTHOR);
+                query.setLimit(LIMIT);
+                query.addDescendingOrder(Post.KEY_CREATED_AT);
+                if (author != null) {
+                    query.whereEqualTo(Post.KEY_AUTHOR, author);
                 }
-                for (int i = 0; i < posts.size(); i++) {
-                    Log.i(TAG, "Post: " + posts.get(i).getDescription()
-                            + ", username: " + posts.get(i).getAuthorUsername());
 
-                    // keep track of the oldest post queried
-                    // upon load more request, load posts only older than this date.
-                    if (i == posts.size() - 1) {
-                        oldestCreatedAt = posts.get(i).getCreatedAt();
+                query.findInBackground(new FindCallback<Post>() {
+                    @Override
+                    public void done(List<Post> posts, ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, "Issue with getting posts.", e);
+                            return;
+                        }
+                        for (int i = 0; i < posts.size(); i++) {
+                            Log.i(TAG, "Post: " + posts.get(i).getDescription()
+                                    + ", username: " + posts.get(i).getAuthorUsername());
+
+                            // keep track of the oldest post queried
+                            // upon load more request, load posts only older than this date.
+                            if (i == posts.size() - 1) {
+                                oldestCreatedAt = posts.get(i).getCreatedAt();
+                            }
+                        }
+                        adapter.clear();
+                        adapter.addAll(posts);
+                        swipeContainer.setRefreshing(false);
                     }
-                }
-                adapter.clear();
-                adapter.addAll(posts);
-                swipeContainer.setRefreshing(false);
+                });
             }
-        });
+        }).start();
     }
 
     // Append the next page of data into the adapter

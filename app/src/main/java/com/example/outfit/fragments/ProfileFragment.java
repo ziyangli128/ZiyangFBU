@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,14 +15,18 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.outfit.R;
+import com.example.outfit.adapters.PostsAdapter;
 import com.example.outfit.databinding.FragmentProfileBinding;
+import com.example.outfit.helpers.ClickListener;
 import com.example.outfit.helpers.QueryPosts;
 import com.example.outfit.models.Author;
+import com.example.outfit.models.Post;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -39,14 +44,15 @@ public class ProfileFragment extends BaseFragment {
     protected TextView tvFollowingNum;
     protected TextView tvFollowerNum;
     protected TextView tvFavoritesNum;
+    private Button btnFollow;
     private FragmentProfileBinding binding;
 
-    protected ParseUser user;
+    protected Author author;
 
     public ProfileFragment() {}
 
-    public ProfileFragment(ParseUser user) {
-        this.user = user;
+    public ProfileFragment(Author author) {
+        this.author = author;
     }
 
     @Override
@@ -62,44 +68,53 @@ public class ProfileFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rvPosts.setAdapter(adapter);
-
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
         tvUsername = view.findViewById(R.id.tvUsername);
         tvFollowingNum = view.findViewById(R.id.tvFollowingNum);
         tvFollowerNum = view.findViewById(R.id.tvFollowerNum);
         tvFavoritesNum = view.findViewById(R.id.tvFavoritesNum);
+        btnFollow = view.findViewById(R.id.btnFollow);
 
+        posts = new ArrayList<>();
+
+        adapter = new PostsAdapter(getContext(), posts);
+
+        rvPosts.setAdapter(adapter);
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(SPAN_COUNT, 1);
         rvPosts.setLayoutManager(layoutManager);
 
-        tvUsername.setText(user.getUsername());
-        try {
-            Author author = user.getParseObject("author").fetchIfNeeded();
-            if (author.getFollowings() != null) {
-                tvFollowingNum.setText((author.getFollowings()).size() + "");
-            }
-            if (((author.getFollowers()) != null)) {
-                tvFollowerNum.setText((author.getFollowers()).size()+ "");
-            }
-            if ((author.getFavorites()) != null) {
-                tvFavoritesNum.setText((author.getFavorites()).size() + "");
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        tvUsername.setText(author.getUsername());
+        if (author.getFollowings() != null) {
+            tvFollowingNum.setText((author.getFollowings()).size() + "");
+        }
+        if (((author.getFollowers()) != null)) {
+            tvFollowerNum.setText((author.getFollowers()).size()+ "");
+        }
+        if ((author.getFavorites()) != null) {
+            tvFavoritesNum.setText((author.getFavorites()).size() + "");
         }
 
-
-        ParseFile profileImage = user.getParseFile("profileImage");
+        ParseFile profileImage = author.getParseFile("profileImage");
         Glide.with(getContext()).load(profileImage.getUrl())
                 .transform(new RoundedCornersTransformation(CORNER_RADIUS, CROP_MARGIN)).into(ivProfileImage);
+
+        if (btnFollow != null) {
+            ArrayList followers = ((ArrayList) author.get(KEY_FOLLOWERS));
+            if (followers != null && followers.contains(ParseUser.getCurrentUser().getParseObject("author").getObjectId())) {
+                binding.btnFollow.setText(R.string.unfollow);
+            } else {
+                binding.btnFollow.setText(R.string.follow);
+            }
+
+            ClickListener.setbtnFollowClickListener(author, binding.btnFollow, TAG);
+        }
 
         queryMyPosts();
     }
 
     @Override
     public void queryMyPosts() {
-        QueryPosts.queryPosts((Author) user.getParseObject("author"));
+        QueryPosts.queryPosts(author);
     }
 }

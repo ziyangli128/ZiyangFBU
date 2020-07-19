@@ -3,13 +3,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.PostsFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#FFFFFF"
+        android:minHeight="?attr/actionBarSize"
+        android:visibility="visible"
+        app:titleTextColor="@android:color/white"
+        tools:visibility="visible">
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabTimeline"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabFollowing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_following" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabTrending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_trending" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabNearby"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_nearby" />
+    </com.google.android.material.tabs.TabLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="40dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPosts"

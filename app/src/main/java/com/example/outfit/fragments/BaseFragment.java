@@ -32,7 +32,7 @@ public abstract class BaseFragment extends Fragment {
     public static final String TAG = "BaseFragment";
     public static final int SPAN_COUNT = 2;
 
-    protected static PostsAdapter adapter;
+    public static PostsAdapter adapter;
     protected List<Post> posts;
     protected RecyclerView rvPosts;
     protected static SwipeRefreshLayout swipeContainer;
@@ -55,8 +55,6 @@ public abstract class BaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         rvPosts = view.findViewById(R.id.rvPosts);
-        //adapter = new PostsAdapter(getContext(), posts);
-        //rvPosts.setAdapter(adapter);
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(SPAN_COUNT, 1);
         rvPosts.setLayoutManager(layoutManager);
@@ -84,14 +82,19 @@ public abstract class BaseFragment extends Fragment {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 Log.i(TAG, "onLoadMore!");
-                //QueryPosts.loadNextData(page);
+                QueryPosts.loadNextData(page);
             }
         };
         // Adds the scroll listener to RecyclerView
         rvPosts.addOnScrollListener(scrollListener);
-
-        //queryMyPosts();
     }
 
     public abstract void queryMyPosts();
+    
+    public void updatePosts(Post post, int position) {
+        Log.i(TAG, "updatePosts: ");
+        posts.remove(position);
+        posts.add(position, post);
+        adapter.notifyDataSetChanged();
+    }
 }

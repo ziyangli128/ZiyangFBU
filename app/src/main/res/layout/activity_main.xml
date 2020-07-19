@@ -7,23 +7,10 @@
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#FFFFFF"
-        android:minHeight="?attr/actionBarSize"
-        android:visibility="visible"
-        app:titleTextColor="@android:color/white"
-        tools:visibility="visible">
-
-    </androidx.appcompat.widget.Toolbar>
-
     <FrameLayout
         android:id="@+id/flContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
         android:layout_above="@id/bottomNavigation" />
 
 
