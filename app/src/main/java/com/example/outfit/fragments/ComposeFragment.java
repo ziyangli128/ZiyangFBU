@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.outfit.R;
 import com.example.outfit.helpers.SavePost;
@@ -59,11 +60,10 @@ public class ComposeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.btnCaptureImage.setOnClickListener(new View.OnClickListener() {
+        binding.ivPostImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "onClick: " + getActivity().toString());
-                //LaunchCamera.launchCamera(getContext(), getActivity());
                 launchCamera();
             }
         });
@@ -73,6 +73,7 @@ public class ComposeFragment extends Fragment {
             public void onClick(View view) {
                 String title = binding.etTitle.getText().toString();
                 String description = binding.etDescription.getText().toString();
+                String brand = binding.etBrand.getText().toString();
                 if (title.isEmpty()) {
                     Toast.makeText(getContext(),
                             R.string.title_empty, Toast.LENGTH_SHORT).show();
@@ -84,7 +85,14 @@ public class ComposeFragment extends Fragment {
                     return;
                 }
                 Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
-                SavePost.savePost(description, title, currentUser, photoFile, getContext(), getActivity());
+                SavePost.savePost(description, title, brand, currentUser, photoFile, getContext(), getActivity());
+            }
+        });
+
+        binding.btnAddBrand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showEditDialog();
             }
         });
     }
@@ -145,5 +153,11 @@ public class ComposeFragment extends Fragment {
         } else {
             Log.i(TAG, "onActivityResult: " + requestCode);
         }
+    }
+
+    private void showEditDialog() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        AddTagFragment addBrandFragment = AddTagFragment.newInstance("Some Title");
+        addBrandFragment.show(fm, "fragment_add_brand");
     }
 }

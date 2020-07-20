@@ -19,12 +19,13 @@ import com.parse.SaveCallback;
 import java.io.File;
 
 public class SavePost extends ComposeFragment {
-    public static void savePost(final String description, String title,
+    public static void savePost(final String description, String title, String brand,
                                 Author currentUser, File photoFile, final Context context,
                                 final FragmentActivity activity) {
         Post post = new Post();
         post.setTitle(title);
         post.setDescription(description);
+        post.setBrand(brand);
         post.setImage(new ParseFile(photoFile));
         post.setAuthor(currentUser);
         post.setLikes("default");

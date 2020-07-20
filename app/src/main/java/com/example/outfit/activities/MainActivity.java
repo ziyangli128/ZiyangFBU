@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK
+                && !fragmentManager.findFragmentById(R.id.flContainer).toString().contains("ComposeFragment") ) {
             // Get data from the Intent (update post)
             Post post = Parcels.unwrap(data.getParcelableExtra("post"));
             int position = data.getIntExtra("position", 0);

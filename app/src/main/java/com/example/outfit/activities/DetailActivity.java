@@ -9,6 +9,7 @@ import android.graphics.Movie;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.outfit.R;
@@ -128,6 +129,8 @@ public class DetailActivity extends AppCompatActivity{
 
         Log.i(TAG, "bindBody: ");
 
+        final ArrayList brand = post.getBrand();
+
         binding.tvTitle.setText(post.getTitle());
         binding.tvDescription.setText(post.getDescription());
         binding.tvCreatedAt.setText(post.getCreatedAt().toString());
@@ -135,8 +138,14 @@ public class DetailActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "onClick: btnMap");
-                Intent i = new Intent(DetailActivity.this, MapsActivity.class);
-                startActivity(i);
+                if (brand == null) {
+                    Toast.makeText(DetailActivity.this, "No brand added to this post!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent i = new Intent(DetailActivity.this, MapsActivity.class);
+                    i.putExtra("brand", brand);
+                    startActivity(i);
+                }
+
             }
         });
     }

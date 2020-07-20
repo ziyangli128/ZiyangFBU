@@ -245,38 +245,49 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void getPlacesRequest() {
+
+        ArrayList brands = getIntent().getStringArrayListExtra("brand");
+        String brand;
         places = new ArrayList<>();
         // create an AsyncHttpClient to send request
         AsyncHttpClient client = new AsyncHttpClient();
-        // send the request from client
-        String url = "https://maps.googleapis.com/maps/api/place/textsearch/"
-                + "json?query==zara&key=AIzaSyCDL3qjAsZGFncXeN7PogP4nC-tY3xLZJ8";
-        client.get(url, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                // called when response HTTP status is "200 OK"
-                Log.d(TAG, "onSuccess");
-                JSONObject jsonObject = json.jsonObject;
-                try {
-                    JSONArray results = jsonObject.getJSONArray("results");
-                    places.addAll(Place.fromJsonArray(results));
-                    Log.i(TAG, "Places: " + places.size());
-                } catch (JSONException e) {
-                    Log.e(TAG, "Hit json exception", e);
-                    e.printStackTrace();
-                }
-                for (int i = 0; i < places.size(); i++) {
-                    Log.i(TAG, "onMapReady: " + places.get(i).getName());
-                    LatLng position = new LatLng(places.get(i).getLat(), places.get(i).getLng());
-                    map.addMarker(new MarkerOptions().position(position));
-                }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.d(TAG, "onFailure");
-            }
-        });
+        for (int i = 0; i < brands.size(); i++) {
+            brand = brands.get(i).toString();
+            Log.i(TAG, "getPlacesRequest: " + brand);
+
+            // send the request from client
+            String url = "https://maps.googleapis.com/maps/api/place/textsearch/"
+                    + "json?query==" + brand + "&key=AIzaSyCDL3qjAsZGFncXeN7PogP4nC-tY3xLZJ8";
+
+
+            client.get(url, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                    // called when response HTTP status is "200 OK"
+                    Log.d(TAG, "onSuccess");
+                    JSONObject jsonObject = json.jsonObject;
+                    try {
+                        JSONArray results = jsonObject.getJSONArray("results");
+                        places.addAll(Place.fromJsonArray(results));
+                        Log.i(TAG, "Places: " + places.size());
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Hit json exception", e);
+                        e.printStackTrace();
+                    }
+                    for (int i = 0; i < places.size(); i++) {
+                        Log.i(TAG, "onMapReady: " + places.get(i).getName());
+                        LatLng position = new LatLng(places.get(i).getLat(), places.get(i).getLng());
+                        map.addMarker(new MarkerOptions().position(position));
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                    // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                    Log.d(TAG, "onFailure");
+                }
+            });
+        }
     }
 }

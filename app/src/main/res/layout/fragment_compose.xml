@@ -10,8 +10,10 @@
 
     <ImageView
         android:id="@+id/ivPostImage"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="50dp"
+        app:srcCompat="@drawable/ic_compose_selector" />
 
     <EditText
         android:id="@+id/etTitle"
@@ -32,17 +34,36 @@
         android:layout_marginRight="50dp"
         android:layout_marginBottom="10dp"
         android:ems="10"
+        android:inputType="textMultiLine"
         android:hint="@string/description_hint" />
 
+    <EditText
+        android:id="@+id/etBrand"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:hint="@string/brand_hint" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        tools:text="Brand" />
+
     <Button
-        android:id="@+id/btnCaptureImage"
+        android:id="@+id/btnAddBrand"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginBottom="10dp"
-        android:text="@string/take_picture"
+        android:text="@string/add_tag"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     <Button

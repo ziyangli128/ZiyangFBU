@@ -15,6 +15,7 @@ public class Post extends ParseObject {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_TITLE = "title";
     public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_BRAND= "brands";
     public static final String KEY_AUTHOR = "author";
     public static final String KEY_CREATED_AT = "createdAt";
     public static final String KEY_LIKES = "likes";
@@ -45,6 +46,14 @@ public class Post extends ParseObject {
 
     public void setImage(ParseFile parseFile) {
         put(KEY_IMAGE, parseFile);
+    }
+
+    public ArrayList getBrand() {
+        return (ArrayList) get(KEY_BRAND);
+    }
+
+    public void setBrand(String brand) {
+        add(KEY_BRAND, brand);
     }
 
     public ParseObject getAuthor() {
