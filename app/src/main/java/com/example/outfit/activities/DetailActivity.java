@@ -2,8 +2,10 @@ package com.example.outfit.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Movie;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,16 +18,25 @@ import com.example.outfit.databinding.ActivityMainBinding;
 import com.example.outfit.helpers.ClickListener;
 import com.example.outfit.helpers.QueryPosts;
 import com.example.outfit.models.Author;
+import com.example.outfit.models.Place;
 import com.example.outfit.models.Post;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
+import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.RequestParams;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import okhttp3.Headers;
 
 public class DetailActivity extends AppCompatActivity{
 
@@ -38,6 +49,7 @@ public class DetailActivity extends AppCompatActivity{
 
     Post post;
     Context context;
+    List<Place> places;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +126,18 @@ public class DetailActivity extends AppCompatActivity{
             Glide.with(this).load(image.getUrl()).into(binding.ivImage);
         }
 
+        Log.i(TAG, "bindBody: ");
+
         binding.tvTitle.setText(post.getTitle());
         binding.tvDescription.setText(post.getDescription());
         binding.tvCreatedAt.setText(post.getCreatedAt().toString());
+        binding.btnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "onClick: btnMap");
+                Intent i = new Intent(DetailActivity.this, MapsActivity.class);
+                startActivity(i);
+            }
+        });
     }
 }

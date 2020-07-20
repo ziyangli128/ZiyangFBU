@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.outfit.helpers.QueryPosts;
@@ -30,13 +31,6 @@ public class PostsFragment extends BaseFragment {
     public static final String TAG = "PostsFragment";
     private TabLayout tabTimeline;
 
-//    protected static PostsAdapter adapter;
-//    protected List<Post> posts;
-//    protected RecyclerView rvPosts;
-//    protected static SwipeRefreshLayout swipeContainer;
-//    private EndlessRecyclerViewScrollListener scrollListener;
-//    protected static Date oldestCreatedAt;
-
     public PostsFragment() {
         // Required empty public constructor
     }
@@ -44,16 +38,18 @@ public class PostsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_posts, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        posts = new ArrayList<>();
 
-        rvPosts = view.findViewById(R.id.rvPosts);
+        posts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), posts);
+        rvPosts = view.findViewById(R.id.rvPosts);
+        //adapter = new PostsAdapter(getContext(), posts);
         rvPosts.setAdapter(adapter);
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(SPAN_COUNT, 1);
@@ -101,43 +97,6 @@ public class PostsFragment extends BaseFragment {
             }
         });
         // set default selection view
-
-
-
-//        // Lookup the swipe container view
-//        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-//        // Setup refresh listener which triggers new data loading
-//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                Log.i(TAG, "onRefresh: fetching new data!");
-//                queryMyPosts();
-//            }
-//        });
-//        // Configure the refreshing colors
-//        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-//                android.R.color.holo_green_light,
-//                android.R.color.holo_orange_light,
-//                android.R.color.holo_red_light);
-
-
-
-        //queryMyPosts();
-
-//        // Retain an instance to call `resetState()` for fresh searches
-//        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
-//            @Override
-//            public void onLoadMore(long page, int totalItemsCount, RecyclerView view) {
-//                // Triggered only when new data needs to be appended to the list
-//                // Add whatever code is needed to append new items to the bottom of the list
-//                Log.i(TAG, "onLoadMore!");
-//                QueryPosts.loadNextData(page);
-//            }
-//        };
-//        // Adds the scroll listener to RecyclerView
-//        rvPosts.addOnScrollListener(scrollListener);
-        
-        
     }
 
     @Override

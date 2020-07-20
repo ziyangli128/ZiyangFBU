@@ -32,7 +32,7 @@ public abstract class BaseFragment extends Fragment {
     public static final String TAG = "BaseFragment";
     public static final int SPAN_COUNT = 2;
 
-    public static PostsAdapter adapter;
+    protected static PostsAdapter adapter;
     protected List<Post> posts;
     protected RecyclerView rvPosts;
     protected static SwipeRefreshLayout swipeContainer;
@@ -48,6 +48,7 @@ public abstract class BaseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_posts, container, false);
+
     }
 
     @Override

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.outfit.R;
 import com.example.outfit.databinding.ActivityMainBinding;
@@ -41,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        //final PostsFragment postsFragment = new PostsFragment();
+        final PostsFragment postsFragment = new PostsFragment();
+        final ComposeFragment composeFragment = new ComposeFragment();
+        final ProfileFragment myProfileFragment = new MyProfileFragment();
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

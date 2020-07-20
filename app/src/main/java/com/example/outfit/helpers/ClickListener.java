@@ -2,6 +2,8 @@ package com.example.outfit.helpers;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +14,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.outfit.R;
+import com.example.outfit.activities.DetailActivity;
 import com.example.outfit.activities.MainActivity;
+import com.example.outfit.activities.MapsActivity;
 import com.example.outfit.fragments.MyProfileFragment;
 import com.example.outfit.fragments.ProfileFragment;
 import com.example.outfit.models.Author;
@@ -113,6 +117,17 @@ public class ClickListener {
                     author.saveInBackground();
                     btnfollow.setText(R.string.unfollow);
                 }
+            }
+        });
+    }
+
+    public static void setFindStoresClickListener(final Context context, final Button btnMap, final String TAG) {
+        btnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "onClick: btnMap");
+                Intent i = new Intent(context, MapsActivity.class);
+                ((Activity) context).startActivity(i);
             }
         });
     }
