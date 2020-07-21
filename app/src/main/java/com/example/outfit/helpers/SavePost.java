@@ -17,9 +17,10 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class SavePost extends ComposeFragment {
-    public static void savePost(final String description, String title, String brand,
+    public static void savePost(final String description, String title, String brand, ArrayList tags,
                                 Author currentUser, File photoFile, final Context context,
                                 final FragmentActivity activity) {
         Post post = new Post();
@@ -30,7 +31,11 @@ public class SavePost extends ComposeFragment {
         post.setAuthor(currentUser);
         post.setLikes("default");
         post.setFavorites("default");
-        post.setTags("casual");
+
+        for (Object tag: tags) {
+            post.setTags((String)tag);
+        }
+
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

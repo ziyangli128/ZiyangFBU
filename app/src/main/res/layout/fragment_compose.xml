@@ -49,11 +49,12 @@
         android:hint="@string/brand_hint" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tvTags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="50dp"
-        tools:text="Brand" />
+        android:textStyle="italic"
+        tools:text="Tags" />
 
     <Button
         android:id="@+id/btnAddBrand"

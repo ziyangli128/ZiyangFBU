@@ -22,6 +22,7 @@
     <string name="submit_post">Submit</string>
     <string name="title_empty">Title cannot be empty!</string>
     <string name="image_empty">Please uplaod an image!</string>
+    <string name="tag_empty">Please choose at least one tag.</string>
     <string name="picture_not_taken">Picture wasn\'t taken!</string>
     <string name="error_saving">Error while saving!</string>
 
@@ -38,4 +39,19 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
     <string name="title_activity_maps">Map</string>
+
+
+    <string name="choose_tag">Please choose at least one tag from below.</string>
+    <string name="chip_artsy">Artsy</string>
+    <string name="chip_bohemian">Bohemian</string>
+    <string name="chip_casual">Casual</string>
+    <string name="chip_chic">Chic</string>
+    <string name="chip_office">Office</string>
+    <string name="chip_preppy">Preppy</string>
+    <string name="chip_rocker">Rocker</string>
+    <string name="chip_sexy">Sexy</string>
+    <string name="chip_sophisticated">Sophisticated</string>
+    <string name="chip_street">Street</string>
+    <string name="chip_tomboy">Tomboy</string>
+    <string name="chip_vintage">Vintage</string>
 </resources>

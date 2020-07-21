@@ -20,22 +20,27 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.outfit.R;
+import com.example.outfit.activities.MainActivity;
 import com.example.outfit.helpers.SavePost;
 import com.example.outfit.databinding.FragmentComposeBinding;
 import com.example.outfit.models.Author;
 import com.parse.ParseUser;
 
+import org.parceler.Parcels;
+
 import java.io.File;
+import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ComposeFragment extends Fragment {
+public class ComposeFragment extends Fragment implements AddTagFragment.AddTagDialogListener {
 
     public static final String TAG = "ComposeFragment";
 
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 44;
     public static String photoFileName = "photo.jpg";
     protected static File photoFile;
+    ArrayList tags;
 
     protected static FragmentComposeBinding binding;
 
@@ -84,8 +89,14 @@ public class ComposeFragment extends Fragment {
                             R.string.image_empty, Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (tags.isEmpty()) {
+                    Toast.makeText(getContext(),
+                            R.string.tag_empty, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
-                SavePost.savePost(description, title, brand, currentUser, photoFile, getContext(), getActivity());
+                SavePost.savePost(description, title, brand, tags, currentUser, photoFile,
+                        getContext(), getActivity());
             }
         });
 
@@ -157,7 +168,21 @@ public class ComposeFragment extends Fragment {
 
     private void showEditDialog() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        AddTagFragment addBrandFragment = AddTagFragment.newInstance("Some Title");
-        addBrandFragment.show(fm, "fragment_add_brand");
+        AddTagFragment addTagFragment = AddTagFragment.newInstance("Some Title");
+        // SETS the target fragment for use later when sending results
+        addTagFragment.setTargetFragment(ComposeFragment.this, 300);
+        addTagFragment.show(fm, "fragment_add_tag");
+    }
+
+    // This is called when the dialog is completed and the results have been passed
+    @Override
+    public void onFinishAddTag(ArrayList tags) {
+        Log.i(TAG, "onFinishAddTag: " + tags.toString());
+        binding.tvTags.setText("Tags: ");
+        for (Object tag: tags) {
+            binding.tvTags.append(tag + " ");
+        }
+
+        this.tags = tags;
     }
 }

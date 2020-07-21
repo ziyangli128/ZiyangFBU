@@ -134,6 +134,10 @@ public class DetailActivity extends AppCompatActivity{
         binding.tvTitle.setText(post.getTitle());
         binding.tvDescription.setText(post.getDescription());
         binding.tvCreatedAt.setText(post.getCreatedAt().toString());
+        if (brand != null) {
+            binding.tvBrand.setText("Brand: " + post.getBrand().get(0).toString());
+        }
+
         binding.btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

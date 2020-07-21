@@ -1,45 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="350dp"
-    android:layout_height="350dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:padding="20dp"
-    tools:context=".activities.MainActivity">
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tweet_text_input_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="280"
-        app:counterOverflowTextAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:counterTextAppearance="@style/TextAppearance.AppCompat.Body1">
-
-        <EditText
-            android:id="@+id/etCompose"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:ems="10"
-            android:gravity="start|top"
-            android:hint="What's happening?"
-            android:inputType="textMultiLine"
-            android:minLines="5" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+    android:orientation="vertical">
 
 
-    <Button
-        android:id="@+id/btnTweet"
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tweet_text_input_layout"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/choose_tag" />
+
+    <TableLayout
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipArtsy"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/chip_artsy"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRocker"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:checkable="true"
+                android:text="@string/chip_rocker"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipBohemian"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/chip_bohemian"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSexy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:checkable="true"
+                android:text="@string/chip_sexy"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCasual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/chip_casual"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSophisticated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:checkable="true"
+                android:text="@string/chip_sophisticated"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipChic"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/chip_chic"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipStreet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:checkable="true"
+                android:text="@string/chip_street"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipOffice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/chip_office"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipTomboy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:checkable="true"
+                android:text="@string/chip_tomboy"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPreppy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/chip_preppy"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipVintage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:checkable="true"
+                android:text="@string/chip_vintage"
+                android:theme="@style/Theme.MaterialComponents.Light" />
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/btnAddTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
-        android:textColor="#FFFFFF" />
-</RelativeLayout>
+        android:layout_marginBottom="20dp"
+        android:text="@string/add_tag"
+        android:textColor="#000000" />
+
+</LinearLayout>

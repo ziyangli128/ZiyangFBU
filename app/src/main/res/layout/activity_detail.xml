@@ -87,14 +87,28 @@
                 android:textSize="12sp"
                 tools:text="Yesterday" />
 
+            <TextView
+                android:id="@+id/tvBrand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="serif-monospace"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                tools:text="zara" />
+
             <Button
                 android:id="@+id/btnMap"
-                android:layout_width="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:background="#03A9F4"
                 android:text="Find Stores"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textColor="#FFFFFF" />
 
         </LinearLayout>
