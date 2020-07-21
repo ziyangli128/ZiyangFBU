@@ -25,7 +25,7 @@ import java.util.List;
 
 public class QueryPosts extends PostsFragment {
     // set the number of posts to query at a single time
-    public static final int LIMIT = 20;
+    public static final int LIMIT = 5;
 
     // query posts from the parse database
     // assertion

@@ -48,7 +48,6 @@ public abstract class BaseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_posts, container, false);
-
     }
 
     @Override
@@ -88,6 +87,7 @@ public abstract class BaseFragment extends Fragment {
         };
         // Adds the scroll listener to RecyclerView
         rvPosts.addOnScrollListener(scrollListener);
+        Log.i(TAG, "onViewCreated: scgrill");
     }
 
     public abstract void queryMyPosts();

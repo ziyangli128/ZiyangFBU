@@ -33,6 +33,8 @@
     <string name="tab_following">Following</string>
     <string name="tab_trending">Trending</string>
     <string name="tab_nearby">Nearby</string>
+    <string name="search">Search clothing styles here.</string>
+    <string name="empty_search">No such posts. Please try with other keywords.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_timeline">TimelineActivity</string>
