@@ -3,7 +3,9 @@ package com.example.outfit.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -20,15 +22,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.outfit.R;
-import com.example.outfit.activities.MainActivity;
 import com.example.outfit.helpers.SavePost;
 import com.example.outfit.databinding.FragmentComposeBinding;
 import com.example.outfit.models.Author;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
-import org.parceler.Parcels;
-
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
@@ -38,8 +40,10 @@ public class ComposeFragment extends Fragment implements AddTagFragment.AddTagDi
     public static final String TAG = "ComposeFragment";
 
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 44;
+    public final static int PICK_PHOTO_CODE = 1046;
     public static String photoFileName = "photo.jpg";
     protected static File photoFile;
+    protected static ParseFile galleryFile;
     ArrayList tags;
 
     protected static FragmentComposeBinding binding;
@@ -73,30 +77,45 @@ public class ComposeFragment extends Fragment implements AddTagFragment.AddTagDi
             }
         });
 
+        binding.btnAccessGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchGallery(view);
+            }
+        });
+
         binding.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String title = binding.etTitle.getText().toString();
                 String description = binding.etDescription.getText().toString();
                 String brand = binding.etBrand.getText().toString();
+                Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
                 if (title.isEmpty()) {
                     Toast.makeText(getContext(),
                             R.string.title_empty, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (photoFile == null || binding.ivPostImage.getDrawable() == null) {
-                    Toast.makeText(getContext(),
-                            R.string.image_empty, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (tags.isEmpty()) {
+                if (tags == null) {
                     Toast.makeText(getContext(),
                             R.string.tag_empty, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
-                SavePost.savePost(description, title, brand, tags, currentUser, photoFile,
-                        getContext(), getActivity());
+                if (photoFile == null || binding.ivPostImage.getDrawable() == null) {
+                    if (galleryFile == null) {
+                        Toast.makeText(getContext(),
+                                R.string.image_empty, Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        SavePost.savePost(description, title, brand, tags, currentUser,
+                                null, galleryFile, getContext(), getActivity());
+                    }
+                } else {
+                    SavePost.savePost(description, title, brand, tags, currentUser, photoFile,
+                            null, getContext(), getActivity());
+                }
+
+
             }
         });
 
@@ -146,6 +165,41 @@ public class ComposeFragment extends Fragment implements AddTagFragment.AddTagDi
         return file;
     }
 
+    // Trigger gallery selection for a photo
+    public void launchGallery(View view) {
+        // Create intent for picking a photo from the gallery
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+        // So as long as the result is not null, it's safe to use the intent.
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            // Bring up gallery to select a photo
+            startActivityForResult(intent, PICK_PHOTO_CODE);
+        }
+    }
+
+    public Bitmap loadFromUri(Uri photoUri) {
+        Bitmap image = null;
+        try {
+            // check version of Android on device
+            if(Build.VERSION.SDK_INT > 27){
+                // on newer versions of Android, use the new decodeBitmap method
+                ImageDecoder.Source source = ImageDecoder.createSource(getContext().getContentResolver(), photoUri);
+                image = ImageDecoder.decodeBitmap(source);
+            } else {
+                // support older versions of Android by using getBitmap
+                image = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoUri);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
+
+
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -154,13 +208,24 @@ public class ComposeFragment extends Fragment implements AddTagFragment.AddTagDi
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
+                // RESIZE BITMAP
                 // Load the taken image into a preview
                 //ImageView ivPostImage = (ImageView) findViewById(R.id.ivPostImage);
                 binding.ivPostImage.setImageBitmap(takenImage);
             } else { // Result was a failure
                 Toast.makeText(getContext(), R.string.picture_not_taken, Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == PICK_PHOTO_CODE) {
+            Uri photoUri = data.getData();
+
+            // Load the image located at photoUri into selectedImage
+            Bitmap selectedImage = loadFromUri(photoUri);
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            selectedImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            galleryFile = new ParseFile("image1.jpg", byteArray);
+            binding.ivPostImage.setImageBitmap(selectedImage);
         } else {
             Log.i(TAG, "onActivityResult: " + requestCode);
         }

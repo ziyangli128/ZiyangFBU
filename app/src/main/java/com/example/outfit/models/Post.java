@@ -45,6 +45,7 @@ public class Post extends ParseObject {
     }
 
     public void setImage(ParseFile parseFile) {
+        parseFile.saveInBackground();
         put(KEY_IMAGE, parseFile);
     }
 

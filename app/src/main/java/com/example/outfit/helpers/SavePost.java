@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -14,6 +15,7 @@ import com.example.outfit.models.Post;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.ProgressCallback;
 import com.parse.SaveCallback;
 
 import java.io.File;
@@ -21,13 +23,19 @@ import java.util.ArrayList;
 
 public class SavePost extends ComposeFragment {
     public static void savePost(final String description, String title, String brand, ArrayList tags,
-                                Author currentUser, File photoFile, final Context context,
+                                Author currentUser, @Nullable File photoFile, @Nullable ParseFile galleryFile, final Context context,
                                 final FragmentActivity activity) {
         Post post = new Post();
         post.setTitle(title);
         post.setDescription(description);
         post.setBrand(brand);
-        post.setImage(new ParseFile(photoFile));
+        if (photoFile != null) {
+            post.setImage(new ParseFile(photoFile));
+        } else {
+            post.setImage(galleryFile);
+        }
+        Log.i(TAG, "savePost: ");
+
         post.setAuthor(currentUser);
         post.setLikes("default");
         post.setFavorites("default");
