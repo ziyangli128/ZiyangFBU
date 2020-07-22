@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -18,6 +19,7 @@ import com.example.outfit.R;
 import com.example.outfit.adapters.PostsAdapter;
 import com.example.outfit.databinding.FragmentProfileBinding;
 import com.example.outfit.helpers.ClickListener;
+import com.example.outfit.helpers.EndlessRecyclerViewScrollListener;
 import com.example.outfit.helpers.QueryPosts;
 import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
@@ -83,6 +85,18 @@ public class ProfileFragment extends BaseFragment {
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(SPAN_COUNT, 1);
         rvPosts.setLayoutManager(layoutManager);
+        // Retain an instance to call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(long page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                Log.i(TAG, "onLoadMore for profile posts!");
+                QueryPosts.loadNextData(page, false, null, author);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvPosts.addOnScrollListener(scrollListener);
 
         tvUsername.setText(author.getUsername());
         if (author.getFollowings() != null) {

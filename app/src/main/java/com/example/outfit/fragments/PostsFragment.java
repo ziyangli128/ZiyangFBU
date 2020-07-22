@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.outfit.activities.MainActivity;
 import com.example.outfit.helpers.EndlessRecyclerViewScrollListener;
@@ -40,8 +41,9 @@ public class PostsFragment extends BaseFragment {
     public static final String TAG = "PostsFragment";
     private TabLayout tabTimeline;
     private SearchView svSearch;
-    private PostsAdapter searchAdapter;
     private ImageView ivGoBack;
+    protected static List<Post> allPosts;
+    protected static List<Post> searchedPosts;
 
     public PostsFragment() {
         // Required empty public constructor
@@ -60,7 +62,6 @@ public class PostsFragment extends BaseFragment {
 
         posts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), posts);
-        rvPosts = view.findViewById(R.id.rvPosts);
         rvPosts.setAdapter(adapter);
 
         tabTimeline = view.findViewById(R.id.tabTimeline);
@@ -78,11 +79,9 @@ public class PostsFragment extends BaseFragment {
                         queryMyPosts();
                         break;
                     case 1:
-                        searchAdapter.clear();
                         queryTrendingPosts();
                         break;
                     case 2:
-                        searchAdapter.clear();
                         queryNearbyPosts();
                         break;
                 }
@@ -128,12 +127,13 @@ public class PostsFragment extends BaseFragment {
     }
     
     private void setOnSearchPosts() {
+
         svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
+            public boolean onQueryTextSubmit(final String s) {
                 Log.i(TAG, "onQueryTextSubmit: submit search request: " + s);
-                List<Post> searchedPosts = new ArrayList<>();
-                for (Post post: posts) {
+                searchedPosts = new ArrayList<>();
+                for (Post post: allPosts) {
                     if (post.getTags().contains(s.toLowerCase())) {
                         searchedPosts.add(post);
                     }
@@ -141,12 +141,29 @@ public class PostsFragment extends BaseFragment {
                 if (searchedPosts.isEmpty()) {
                     Toast.makeText(getContext(), R.string.empty_search, Toast.LENGTH_SHORT).show();
                 } else {
-                    searchAdapter = new PostsAdapter(getContext(), searchedPosts);
-                    Log.i(TAG, "onQueryTextSubmit: " + searchAdapter.getItemCount());
-                    rvPosts.setAdapter(searchAdapter);
+                    adapter.clear();
+                    adapter.addAll(searchedPosts);
+                    Log.i(TAG, "onQueryTextSubmit: " + adapter.getItemCount());
+
+                    // Retain an instance to call `resetState()` for fresh searches
+                    final EndlessRecyclerViewScrollListener scrollListener2 = new EndlessRecyclerViewScrollListener(layoutManager) {
+                        @Override
+                        public void onLoadMore(long page, int totalItemsCount, RecyclerView view) {
+                            // Triggered only when new data needs to be appended to the list
+                            // Add whatever code is needed to append new items to the bottom of the list
+                            Log.i(TAG, "onLoadMore for search!");
+                            QueryPosts.loadNextData(page, true, s, null);
+                        }
+                    };
+
+                    // Adds the scroll listener to RecyclerView
+                    rvPosts.clearOnScrollListeners();
+                    rvPosts.addOnScrollListener(scrollListener2);
+
+                    swipeContainer.setOnRefreshListener(null);
+                    ivGoBack.setVisibility(View.VISIBLE);
                 }
                 svSearch.clearFocus();
-                ivGoBack.setVisibility(View.VISIBLE);
                 return true;
             }
 
@@ -161,8 +178,21 @@ public class PostsFragment extends BaseFragment {
         ivGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rvPosts.setAdapter(adapter);
+                adapter.clear();
+                adapter.addAll(allPosts);
+                svSearch.setQuery(null, true);
                 ivGoBack.setVisibility(View.GONE);
+                rvPosts.clearOnScrollListeners();
+                // Setup refresh listener which triggers new data loading
+                swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.i(TAG, "onRefresh: fetching new data!");
+                        adapter.clear();
+                        queryMyPosts();
+                    }
+                });
+                rvPosts.addOnScrollListener(scrollListener);
             }
         });
     }

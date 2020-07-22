@@ -20,12 +20,14 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class QueryPosts extends PostsFragment {
     // set the number of posts to query at a single time
-    public static final int LIMIT = 5;
+    public static final int LIMIT = 2;
+    public static final String TAG = "QueryPosts";
 
     // query posts from the parse database
     // assertion
@@ -65,6 +67,7 @@ public class QueryPosts extends PostsFragment {
                         adapter.clear();
                         adapter.addAll(posts);
                         swipeContainer.setRefreshing(false);
+                        allPosts = new ArrayList<>(posts);
                     }
                 });
             }
@@ -72,13 +75,17 @@ public class QueryPosts extends PostsFragment {
     }
 
     // Append the next page of data into the adapter
-    public static void loadNextData(long page) {
+    public static void loadNextData(long page, final boolean loadSearch, @Nullable final String search,
+                                    @Nullable Author author) {
         // specify the class to query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_AUTHOR);
         query.setLimit(LIMIT);
         query.whereLessThan(Post.KEY_CREATED_AT, oldestCreatedAt);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
+        if (author != null) {
+            query.whereEqualTo(Post.KEY_AUTHOR, author);
+        }
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
@@ -93,8 +100,22 @@ public class QueryPosts extends PostsFragment {
                         oldestCreatedAt = posts.get(i).getCreatedAt();
                     }
                 }
-                adapter.addAll(posts);
+                int postsNumber = allPosts.size();
+                allPosts.addAll(posts);
+                if (!loadSearch) {
+                    adapter.addAll(posts);
+                } else {
+                    List<Post> searchedPosts = new ArrayList<>();
+                    for (int i = postsNumber; i < allPosts.size(); i++) {
+                        if (allPosts.get(i).getTags().contains(search.toLowerCase())) {
+                            searchedPosts.add(allPosts.get(i));
+                        }
+                    }
+                    adapter.addAll(searchedPosts);
+                }
+
                 swipeContainer.setRefreshing(false);
+
             }
         });
     }

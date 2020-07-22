@@ -48,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
         final ComposeFragment composeFragment = new ComposeFragment();
         final ProfileFragment myProfileFragment = new MyProfileFragment();
 
+
         binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                //Fragment fragment;
                 switch (menuItem.getItemId()) {
                     case R.id.action_home:
                         fragment = new PostsFragment();
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new MyProfileFragment();
                         break;
                 }
+
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
                 return true;
             }
