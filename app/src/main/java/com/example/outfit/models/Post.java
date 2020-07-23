@@ -2,6 +2,7 @@ package com.example.outfit.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -23,6 +24,7 @@ public class Post extends ParseObject {
     public static final String KEY_COMMENTS= "comments";
     public static final String KEY_TAGS= "tags";
     public static final String KEY_USERNAME= "username";
+    public static final String KEY_LOCATION = "location";
 
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
@@ -107,5 +109,13 @@ public class Post extends ParseObject {
 
     public void removeFavorites(String userId) {
         removeAll(KEY_FAVORITES, Collections.singleton(userId));
+    }
+
+    public ParseGeoPoint getLocation() {
+        return getParseGeoPoint(KEY_LOCATION);
+    }
+
+    public void setLocation(ParseGeoPoint location) {
+        put(KEY_LOCATION, location);
     }
 }

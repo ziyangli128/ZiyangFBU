@@ -1,7 +1,6 @@
 package com.example.outfit.helpers;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -10,7 +9,6 @@ import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.outfit.models.Place;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -20,7 +18,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Headers;
 
