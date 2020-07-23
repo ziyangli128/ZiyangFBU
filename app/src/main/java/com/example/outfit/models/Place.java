@@ -17,6 +17,11 @@ public class Place {
     String name;
     String lng;
     String lat;
+    String placeId;
+    String formattedAddress;
+    String formattedPhoneNumber;
+    Double rating;
+    String website;
 
 
     // no-arg, empty constructor required for Parceler
@@ -27,6 +32,7 @@ public class Place {
         name = jsonObject.getString("name");
         lng = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng");
         lat = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat");
+        placeId = jsonObject.getString("place_id");
     }
 
     // turn the object from JSONArray into Place objects and store in a list
@@ -50,5 +56,41 @@ public class Place {
 
     public Double getLat() {
         return Double.parseDouble(lat);
+    }
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public String getFormattedAddress() {
+        return formattedAddress;
+    }
+
+    public String getFormattedPhoneNumber() {
+        return formattedPhoneNumber;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void addFormattedAddress(String address) {
+        formattedAddress = address;
+    }
+
+    public void addFormattedPhoneNumber(String phoneNumber) {
+        formattedPhoneNumber = phoneNumber;
+    }
+
+    public void addRating(Double returnedRating) {
+        rating = returnedRating;
+    }
+
+    public void addWebsite(String returnedWebsite) {
+        website = returnedWebsite;
     }
 }

@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.outfit.R;
+import com.example.outfit.helpers.GetApiRequests;
 import com.example.outfit.models.Place;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -59,6 +60,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Location mCurrentLocation;
     private long UPDATE_INTERVAL = 60000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
+    private int zoomRadius = 8;
+    private int storeZoomRadius = 14;
     List<Place> places;
 
     private final static String KEY_LOCATION = "location";
@@ -124,6 +127,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onSuccess(Location location) {
                         if (location != null) {
                             onLocationChanged(location);
+                            Toast.makeText(getApplicationContext(), "GPS location was found!", Toast.LENGTH_SHORT).show();
+                            LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoomRadius);
+                            map.animateCamera(cameraUpdate);
                         }
                     }
                 })
@@ -159,12 +166,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Display the connection status
 
         if (mCurrentLocation != null) {
-            Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
             LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoomRadius);
             map.animateCamera(cameraUpdate);
         } else {
-            Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
         }
         MapsActivityPermissionsDispatcher.startLocationUpdatesWithPermissionCheck(this);
     }
@@ -213,7 +220,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String msg = "Updated Location: " +
                 Double.toString(location.getLatitude()) + "," +
                 Double.toString(location.getLongitude());
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -225,62 +232,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap map) {
         Log.i(TAG, "onMapReady: ");
-        getPlacesRequest();
+        GetApiRequests.getPlacesRequest(map, TAG, this);
         map.setOnMarkerClickListener(this);
         loadMap(map);
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Toast.makeText(getApplicationContext(), "Clicked: " +
-                        marker.getPosition(),
-                Toast.LENGTH_SHORT).show();
+
+        LatLng latLng = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, storeZoomRadius);
+        map.animateCamera(cameraUpdate);
+        Place placeInDetail = GetApiRequests.getPlacesDetailRequest(latLng, TAG, getApplicationContext());
         return true;
     }
 
-    public void getPlacesRequest() {
 
-        ArrayList brands = getIntent().getStringArrayListExtra("brand");
-        String brand;
-        places = new ArrayList<>();
-        // create an AsyncHttpClient to send request
-        AsyncHttpClient client = new AsyncHttpClient();
-
-        for (int i = 0; i < brands.size(); i++) {
-            brand = brands.get(i).toString();
-            Log.i(TAG, "getPlacesRequest: " + brand);
-
-            // send the request from client
-            String url = "https://maps.googleapis.com/maps/api/place/textsearch/"
-                    + "json?query==" + brand + "&key=AIzaSyCDL3qjAsZGFncXeN7PogP4nC-tY3xLZJ8";
-
-            client.get(url, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Headers headers, JSON json) {
-                    // called when response HTTP status is "200 OK"
-                    Log.d(TAG, "onSuccess");
-                    JSONObject jsonObject = json.jsonObject;
-                    try {
-                        JSONArray results = jsonObject.getJSONArray("results");
-                        places.addAll(Place.fromJsonArray(results));
-                        Log.i(TAG, "Places: " + places.size());
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Hit json exception", e);
-                        e.printStackTrace();
-                    }
-                    for (int i = 0; i < places.size(); i++) {
-                        Log.i(TAG, "onMapReady: " + places.get(i).getName());
-                        LatLng position = new LatLng(places.get(i).getLat(), places.get(i).getLng());
-                        map.addMarker(new MarkerOptions().position(position));
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                    // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                    Log.d(TAG, "onFailure");
-                }
-            });
-        }
-    }
 }
