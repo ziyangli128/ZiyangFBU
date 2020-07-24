@@ -13,6 +13,7 @@ import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.outfit.adapters.PostsAdapter;
 import com.example.outfit.fragments.PostsFragment;
 import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
@@ -31,7 +32,6 @@ public class QueryPosts extends PostsFragment {
     // set the number of posts to query at a single time
     public static final int LIMIT = 2;
     public static final String TAG = "QueryPosts";
-    public static List<Post> allNearbyPosts;
     public static int begin, end;
 
     // query posts from the parse database
@@ -180,8 +180,6 @@ public class QueryPosts extends PostsFragment {
                             return;
                         }
                         for (int i = 0; i < posts.size(); i++) {
-                            Log.i(TAG, "Post: " + posts.get(i).getDescription()
-                                    + ", username: " + posts.get(i).getAuthorUsername());
                             ParseGeoPoint loc = posts.get(i).getLocation();
                             double distance = loc.distanceInKilometersTo(currentUserLocation);
                             posts.get(i).setDistanceToCurrent(distance);
@@ -191,13 +189,28 @@ public class QueryPosts extends PostsFragment {
                         begin = 0;
                         end = 10;
                         adapter.clear();
-                        adapter.addAll(posts.subList(begin, end));
+                        if (posts.size() > end) {
+                            adapter.addAll(posts.subList(begin, end));
+                        } else if (posts.size() > begin){
+                            adapter.addAll(posts.subList(begin, posts.size()));
+                        }
                         swipeContainer.setRefreshing(false);
                         allNearbyPosts = new ArrayList<>(posts);
                     }
                 });
             }
         }).start();
+    }
+
+    public static void getNearbyPosts() {
+        adapter.clear();
+        begin = 0;
+        end = 10;
+        if (allNearbyPosts.size() > end) {
+            adapter.addAll(allNearbyPosts.subList(begin, end));
+        } else if (allNearbyPosts.size() > begin){
+            adapter.addAll(allNearbyPosts.subList(begin, allNearbyPosts.size()));
+        }
     }
 
     public static void loadNextDataForNearby() {
@@ -208,7 +221,6 @@ public class QueryPosts extends PostsFragment {
         } else if (allNearbyPosts.size() > begin){
             adapter.addAll(allNearbyPosts.subList(begin, allNearbyPosts.size()));
         }
-
     }
 
     static int partition(List<Post> posts, int begin, int end) {

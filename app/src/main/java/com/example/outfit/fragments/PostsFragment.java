@@ -44,6 +44,9 @@ public class PostsFragment extends BaseFragment {
     private ImageView ivGoBack;
     protected static List<Post> allPosts;
     protected static List<Post> searchedPosts;
+    public static List<Post> allNearbyPosts;
+    public int count = 0;
+
 
     public PostsFragment() {
         // Required empty public constructor
@@ -70,14 +73,14 @@ public class PostsFragment extends BaseFragment {
         ivGoBack.setVisibility(View.GONE);
 
         queryMyPosts();
-
         tabTimeline.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
                     default:
-                        queryMyPosts();
+                        adapter.clear();
+                        adapter.addAll(allPosts);
                         rvPosts.clearOnScrollListeners();
                         rvPosts.addOnScrollListener(scrollListener);
                         swipeContainer.setOnRefreshListener(onRefreshListener);
@@ -86,13 +89,19 @@ public class PostsFragment extends BaseFragment {
                         queryTrendingPosts();
                         break;
                     case 2:
-                        queryNearbyPosts(getActivity());
+                        if (count == 0) {
+                            queryNearbyPosts(getActivity());
+                            count++;
+                        } else {
+                            QueryPosts.getNearbyPosts();
+                        }
+                        Log.i(TAG, "onTabSelected: " + count);
                         rvPosts.clearOnScrollListeners();
                         rvPosts.addOnScrollListener(scrollListenerForNearby);
                         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                             @Override
                             public void onRefresh() {
-                                Log.i(TAG, "onRefresh: haha");
+                                Log.i(TAG, "onRefresh for nearby Posts");
                                 QueryPosts.queryNearbyPosts(getActivity());
                             }
                         });
@@ -118,7 +127,7 @@ public class PostsFragment extends BaseFragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                rvPosts.smoothScrollToPosition(0);
             }
         });
         
