@@ -26,6 +26,8 @@ public class Post extends ParseObject {
     public static final String KEY_USERNAME= "username";
     public static final String KEY_LOCATION = "location";
 
+    public Double distanceToCurrent;
+
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
     }
@@ -118,4 +120,8 @@ public class Post extends ParseObject {
     public void setLocation(ParseGeoPoint location) {
         put(KEY_LOCATION, location);
     }
+
+    public double getDistanceToCurrent () {return distanceToCurrent;}
+
+    public void setDistanceToCurrent (double distance) { distanceToCurrent = distance;}
 }

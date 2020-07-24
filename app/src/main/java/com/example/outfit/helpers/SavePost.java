@@ -51,10 +51,10 @@ public class SavePost extends ComposeFragment {
         post.setLikes("default");
         post.setFavorites("default");
 
-        ParseGeoPoint currentLocation = saveCurrentUserLocation(activity);
         for (Object tag: tags) {
             post.setTags((String)tag);
         }
+        ParseGeoPoint currentLocation = saveCurrentUserLocation(activity);
         post.setLocation(currentLocation);
 
         post.saveInBackground(new SaveCallback() {

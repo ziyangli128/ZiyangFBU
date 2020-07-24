@@ -70,6 +70,7 @@ public class PostsFragment extends BaseFragment {
         ivGoBack.setVisibility(View.GONE);
 
         queryMyPosts();
+
         tabTimeline.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -77,12 +78,24 @@ public class PostsFragment extends BaseFragment {
                     case 0:
                     default:
                         queryMyPosts();
+                        rvPosts.clearOnScrollListeners();
+                        rvPosts.addOnScrollListener(scrollListener);
+                        swipeContainer.setOnRefreshListener(onRefreshListener);
                         break;
                     case 1:
                         queryTrendingPosts();
                         break;
                     case 2:
-                        queryNearbyPosts();
+                        queryNearbyPosts(getActivity());
+                        rvPosts.clearOnScrollListeners();
+                        rvPosts.addOnScrollListener(scrollListenerForNearby);
+                        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                            @Override
+                            public void onRefresh() {
+                                Log.i(TAG, "onRefresh: haha");
+                                QueryPosts.queryNearbyPosts(getActivity());
+                            }
+                        });
                         break;
                 }
             }
@@ -118,11 +131,12 @@ public class PostsFragment extends BaseFragment {
         QueryPosts.queryPosts(null);
     }
 
-    public void queryTrendingPosts() {
+    public static void queryTrendingPosts() {
 
     }
 
-    public void queryNearbyPosts() {
+    public static void queryNearbyPosts(Activity activity) {
+        QueryPosts.queryNearbyPosts(activity);
 
     }
     

@@ -38,6 +38,8 @@ public abstract class BaseFragment extends Fragment {
     protected RecyclerView rvPosts;
     protected static SwipeRefreshLayout swipeContainer;
     protected EndlessRecyclerViewScrollListener scrollListener;
+    protected EndlessRecyclerViewScrollListener scrollListenerForNearby;
+    protected SwipeRefreshLayout.OnRefreshListener onRefreshListener;
     protected static Date oldestCreatedAt;
 
     public BaseFragment() {
@@ -62,14 +64,15 @@ public abstract class BaseFragment extends Fragment {
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "onRefresh: fetching new data!");
                 adapter.clear();
                 queryMyPosts();
             }
-        });
+        };
+        swipeContainer.setOnRefreshListener(onRefreshListener);
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -88,6 +91,14 @@ public abstract class BaseFragment extends Fragment {
         };
         // Adds the scroll listener to RecyclerView
         rvPosts.addOnScrollListener(scrollListener);
+
+        scrollListenerForNearby = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(long page, int totalItemsCount, RecyclerView view) {
+                Log.i(TAG, "onLoadMore for nearby posts!");
+                QueryPosts.loadNextDataForNearby();
+            }
+        };
     }
 
     public abstract void queryMyPosts();

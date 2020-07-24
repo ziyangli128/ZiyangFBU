@@ -1,5 +1,7 @@
 package com.example.outfit.helpers;
 
+import android.app.Activity;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Adapter;
@@ -17,6 +19,7 @@ import com.example.outfit.models.Post;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -28,6 +31,8 @@ public class QueryPosts extends PostsFragment {
     // set the number of posts to query at a single time
     public static final int LIMIT = 2;
     public static final String TAG = "QueryPosts";
+    public static List<Post> allNearbyPosts;
+    public static int begin, end;
 
     // query posts from the parse database
     // assertion
@@ -118,5 +123,117 @@ public class QueryPosts extends PostsFragment {
 
             }
         });
+    }
+
+    public static void queryTrendingPosts() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // specify the class to query
+                ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+                query.include(Post.KEY_AUTHOR);
+                query.setLimit(3);
+                query.addDescendingOrder(Post.KEY_CREATED_AT);
+
+                query.findInBackground(new FindCallback<Post>() {
+                    @Override
+                    public void done(List<Post> posts, ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, "Issue with getting posts.", e);
+                            return;
+                        }
+                        for (int i = 0; i < posts.size(); i++) {
+                            Log.i(TAG, "Post: " + posts.get(i).getDescription()
+                                    + ", username: " + posts.get(i).getAuthorUsername());
+
+                            // keep track of the oldest post queried
+                            // upon load more request, load posts only older than this date.
+                            if (i == posts.size() - 1) {
+                                oldestCreatedAt = posts.get(i).getCreatedAt();
+                            }
+                        }
+                        adapter.clear();
+                        adapter.addAll(posts);
+                        swipeContainer.setRefreshing(false);
+                        allPosts = new ArrayList<>(posts);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    public static void queryNearbyPosts(Activity activity) {
+        final ParseGeoPoint currentUserLocation = SavePost.saveCurrentUserLocation(activity);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                // specify the class to query
+                ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+                query.include(Post.KEY_AUTHOR);
+
+                query.findInBackground(new FindCallback<Post>() {
+                    @Override
+                    public void done(List<Post> posts, ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, "Issue with getting posts.", e);
+                            return;
+                        }
+                        for (int i = 0; i < posts.size(); i++) {
+                            Log.i(TAG, "Post: " + posts.get(i).getDescription()
+                                    + ", username: " + posts.get(i).getAuthorUsername());
+                            ParseGeoPoint loc = posts.get(i).getLocation();
+                            double distance = loc.distanceInKilometersTo(currentUserLocation);
+                            posts.get(i).setDistanceToCurrent(distance);
+                        }
+
+                        quickSort(posts, 0, posts.size() - 1);
+                        begin = 0;
+                        end = 10;
+                        adapter.clear();
+                        adapter.addAll(posts.subList(begin, end));
+                        swipeContainer.setRefreshing(false);
+                        allNearbyPosts = new ArrayList<>(posts);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    public static void loadNextDataForNearby() {
+        begin += 10;
+        end += 10;
+        if (allNearbyPosts.size() > end) {
+            adapter.addAll(allNearbyPosts.subList(begin, end));
+        } else if (allNearbyPosts.size() > begin){
+            adapter.addAll(allNearbyPosts.subList(begin, allNearbyPosts.size()));
+        }
+
+    }
+
+    static int partition(List<Post> posts, int begin, int end) {
+        int pivot = end;
+
+        int counter = begin;
+        for (int i = begin; i < end; i++) {
+            if (posts.get(i).getDistanceToCurrent() < posts.get(pivot).getDistanceToCurrent()) {
+                Post temp = posts.get(counter);
+                posts.set(counter, posts.get(i));
+                posts.set(i, temp);
+                counter++;
+            }
+        }
+        Post temp = posts.get(pivot);
+        posts.set(pivot, posts.get(counter));
+        posts.set(counter, temp);
+
+        return counter;
+    }
+
+    public static void quickSort(List<Post> posts, int begin, int end) {
+        if (end <= begin) return;
+        int pivot = partition(posts, begin, end);
+        quickSort(posts, begin, pivot-1);
+        quickSort(posts, pivot+1, end);
     }
 }
