@@ -47,6 +47,9 @@ public class PostsFragment extends BaseFragment {
     public static List<Post> allNearbyPosts;
     public int count = 0;
 
+    int[] postsPosition;
+    int[] nearbyPostsPosition;
+
 
     public PostsFragment() {
         // Required empty public constructor
@@ -60,7 +63,7 @@ public class PostsFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         posts = new ArrayList<>();
@@ -79,11 +82,11 @@ public class PostsFragment extends BaseFragment {
                 switch (tab.getPosition()) {
                     case 0:
                     default:
-                        adapter.clear();
                         adapter.addAll(allPosts);
                         rvPosts.clearOnScrollListeners();
                         rvPosts.addOnScrollListener(scrollListener);
                         swipeContainer.setOnRefreshListener(onRefreshListener);
+                        rvPosts.scrollToPosition(postsPosition[0]);
                         break;
                     case 1:
                         queryTrendingPosts();
@@ -93,9 +96,11 @@ public class PostsFragment extends BaseFragment {
                             queryNearbyPosts(getActivity());
                             count++;
                         } else {
+
                             QueryPosts.getNearbyPosts();
+                            Log.i(TAG, "onTabSelected: " +adapter.getItemCount());
+                            rvPosts.scrollToPosition(nearbyPostsPosition[0]);
                         }
-                        Log.i(TAG, "onTabSelected: " + count);
                         rvPosts.clearOnScrollListeners();
                         rvPosts.addOnScrollListener(scrollListenerForNearby);
                         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -105,6 +110,8 @@ public class PostsFragment extends BaseFragment {
                                 QueryPosts.queryNearbyPosts(getActivity());
                             }
                         });
+
+
                         break;
                 }
             }
@@ -114,12 +121,14 @@ public class PostsFragment extends BaseFragment {
                 switch (tab.getPosition()) {
                     case 0:
                     default:
+                        postsPosition = layoutManager.findFirstCompletelyVisibleItemPositions(null);
                         adapter.clear();
                         break;
                     case 1:
                         adapter.clear();
                         break;
                     case 2:
+                        nearbyPostsPosition = layoutManager.findFirstCompletelyVisibleItemPositions(null);
                         adapter.clear();
                         break;
                 }
