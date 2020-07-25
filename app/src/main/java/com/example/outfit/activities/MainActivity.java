@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.action_home:
                         Log.i(TAG, "onNavigationItemSelected: posts" + fragmentManager.getBackStackEntryCount());
-                        for (int i = 0; i < fragmentManager.getBackStackEntryCount() - 1; i++) {
+                        for (int i = 0; i < fragmentManager.getBackStackEntryCount() - 2; i++) {
                             fragmentManager.popBackStack();
                         }
                         fragmentManager.beginTransaction()
