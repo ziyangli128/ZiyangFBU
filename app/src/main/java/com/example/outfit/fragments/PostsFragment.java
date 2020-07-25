@@ -52,7 +52,16 @@ public class PostsFragment extends BaseFragment {
 
 
     public PostsFragment() {
+
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        posts = new ArrayList<>();
+        adapter = new PostsAdapter(getContext(), posts);
+        queryMyPosts();
     }
 
     @Override
@@ -66,8 +75,6 @@ public class PostsFragment extends BaseFragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        posts = new ArrayList<>();
-        adapter = new PostsAdapter(getContext(), posts);
         rvPosts.setAdapter(adapter);
 
         tabTimeline = view.findViewById(R.id.tabTimeline);
@@ -75,7 +82,6 @@ public class PostsFragment extends BaseFragment {
         ivGoBack = view.findViewById(R.id.ivGoBack);
         ivGoBack.setVisibility(View.GONE);
 
-        queryMyPosts();
         tabTimeline.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     Fragment fragment;
+    int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +55,26 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_home:
-                        fragment = new PostsFragment();
+                        Log.i(TAG, "onNavigationItemSelected: posts" + fragmentManager.getBackStackEntryCount());
+                        for (int i = 0; i < fragmentManager.getBackStackEntryCount() - 1; i++) {
+                            fragmentManager.popBackStack();
+                        }
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.flContainer, postsFragment).commit();
                         break;
                     case R.id.action_compose:
-                        fragment = new ComposeFragment();
+                        Log.i(TAG, "onNavigationItemSelected: compose" + fragmentManager.getBackStackEntryCount());
+                        //Log.i(TAG, "onNavigationItemSelected: " + fragmentManager.getPrimaryNavigationFragment().toString());
+                        fragmentManager.beginTransaction().addToBackStack("To compose")
+                                .replace(R.id.flContainer, composeFragment).commit();
                         break;
                     case R.id.action_profile:
                     default:
-                        fragment = new MyProfileFragment();
+                        Log.i(TAG, "onNavigationItemSelected: myporfile" + fragmentManager.getBackStackEntryCount());
+                        fragmentManager.beginTransaction().addToBackStack("To myProfile")
+                                .replace(R.id.flContainer, myProfileFragment).commit();
                         break;
                 }
-
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
                 return true;
             }
         });

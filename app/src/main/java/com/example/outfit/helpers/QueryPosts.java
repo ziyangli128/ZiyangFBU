@@ -202,13 +202,6 @@ public class QueryPosts extends PostsFragment {
     }
 
     public static void getNearbyPosts() {
-//        begin = 0;
-//        end = 10;
-//        if (allNearbyPosts.size() > end) {
-//            adapter.addAll(allNearbyPosts.subList(begin, end));
-//        } else if (allNearbyPosts.size() > begin){
-//            adapter.addAll(allNearbyPosts.subList(begin, allNearbyPosts.size()));
-//        }
         adapter.addAll(allNearbyPosts);
     }
 

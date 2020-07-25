@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.outfit.R;
@@ -48,6 +49,7 @@ public class ProfileFragment extends BaseFragment {
     protected TextView tvFavoritesNum;
     private Button btnFollow;
     private FragmentProfileBinding binding;
+    protected RecyclerView rvProfilePosts;
 
     protected Author author;
 
@@ -55,6 +57,14 @@ public class ProfileFragment extends BaseFragment {
 
     public ProfileFragment(Author author) {
         this.author = author;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        posts = new ArrayList<>();
+        adapter = new PostsAdapter(getContext(), posts);
+        queryMyPosts();
     }
 
     @Override
@@ -68,7 +78,6 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
         tvUsername = view.findViewById(R.id.tvUsername);
@@ -77,14 +86,11 @@ public class ProfileFragment extends BaseFragment {
         tvFavoritesNum = view.findViewById(R.id.tvFavoritesNum);
         btnFollow = view.findViewById(R.id.btnFollow);
 
-        posts = new ArrayList<>();
-
-        adapter = new PostsAdapter(getContext(), posts);
-
-        rvPosts.setAdapter(adapter);
+        rvProfilePosts = view.findViewById(R.id.rvProfilePosts);
+        rvProfilePosts.setAdapter(adapter);
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(SPAN_COUNT, 1);
-        rvPosts.setLayoutManager(layoutManager);
+        rvProfilePosts.setLayoutManager(layoutManager);
         // Retain an instance to call `resetState()` for fresh searches
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -96,7 +102,25 @@ public class ProfileFragment extends BaseFragment {
             }
         };
         // Adds the scroll listener to RecyclerView
-        rvPosts.addOnScrollListener(scrollListener);
+        rvProfilePosts.addOnScrollListener(scrollListener);
+
+        // Lookup the swipe container view
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i(TAG, "onRefresh: fetching new data!");
+                adapter.clear();
+                queryMyPosts();
+            }
+        };
+        swipeContainer.setOnRefreshListener(onRefreshListener);
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         tvUsername.setText(author.getUsername());
         if (author.getFollowings() != null) {
@@ -123,8 +147,6 @@ public class ProfileFragment extends BaseFragment {
 
             ClickListener.setbtnFollowClickListener(author, binding.btnFollow, TAG);
         }
-
-        queryMyPosts();
     }
 
     @Override

@@ -62,9 +62,11 @@ public class ClickListener {
                 } else {
                     fragment = new ProfileFragment((Author) post.getAuthor());
                 }
+                Log.i(TAG, "onClick: " + activity.getSupportFragmentManager().getBackStackEntryCount());
+
                 FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.flContainer, fragment);
-                activity.getSupportFragmentManager().popBackStack();
+//                activity.getSupportFragmentManager().popBackStack();
                 ft.addToBackStack("to profile");
                 ft.commit();
             }
