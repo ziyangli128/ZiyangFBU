@@ -30,10 +30,11 @@ import java.util.List;
 
 public class QueryPosts extends PostsFragment {
     // set the number of posts to query at a single time
-    public static final int LIMIT = 2;
+    public static final int LIMIT = 6;
     public static final String TAG = "QueryPosts";
     public static int begin = 0;
     public static int end = 15;
+    public static Date oldestFollowingPost;
 
     // query posts from the parse database
     // assertion
@@ -126,41 +127,101 @@ public class QueryPosts extends PostsFragment {
         });
     }
 
-    public static void queryTrendingPosts() {
+    public static void queryFollowingPosts() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 // specify the class to query
                 ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
                 query.include(Post.KEY_AUTHOR);
-                query.setLimit(3);
+                query.setLimit(LIMIT);
                 query.addDescendingOrder(Post.KEY_CREATED_AT);
+
+                final Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
 
                 query.findInBackground(new FindCallback<Post>() {
                     @Override
                     public void done(List<Post> posts, ParseException e) {
+                        List<Post> followingPosts = new ArrayList<>();
                         if (e != null) {
-                            Log.e(TAG, "Issue with getting posts.", e);
+                            Log.e(TAG, "Issue with getting following's posts.", e);
                             return;
                         }
                         for (int i = 0; i < posts.size(); i++) {
                             Log.i(TAG, "Post: " + posts.get(i).getDescription()
                                     + ", username: " + posts.get(i).getAuthorUsername());
+                            if (currentUser.getFollowings()
+                                    .contains(posts.get(i).getAuthor().getObjectId())) {
+                                Log.i(TAG, "Post: " + posts.get(i).getDescription()
+                                        + ", username: " + posts.get(i).getAuthorUsername());
 
+                                followingPosts.add(posts.get(i));
+                            }
                             // keep track of the oldest post queried
                             // upon load more request, load posts only older than this date.
                             if (i == posts.size() - 1) {
-                                oldestCreatedAt = posts.get(i).getCreatedAt();
+                                oldestFollowingPost = posts.get(i).getCreatedAt();
                             }
                         }
+                        if (followingPosts.isEmpty() && !posts.isEmpty()) {
+                            loadNextDataForFollowing();
+                        }
                         adapter.clear();
-                        adapter.addAll(posts);
+                        adapter.addAll(followingPosts);
                         swipeContainer.setRefreshing(false);
-                        allPosts = new ArrayList<>(posts);
+                        allFollowingPosts = new ArrayList<>(followingPosts);
                     }
                 });
             }
         }).start();
+    }
+
+    public static void loadNextDataForFollowing() {
+        // specify the class to query
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.KEY_AUTHOR);
+        query.setLimit(LIMIT);
+        query.whereLessThan(Post.KEY_CREATED_AT, oldestFollowingPost);
+        query.addDescendingOrder(Post.KEY_CREATED_AT);
+
+        final Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
+
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> posts, ParseException e) {
+                List<Post> followingPosts = new ArrayList<>();
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting following posts.", e);
+                    return;
+                }
+                for (int i = 0; i < posts.size(); i++) {
+                    Log.i(TAG, "Post: " + posts.get(i).getDescription()
+                            + ", username: " + posts.get(i).getAuthorUsername());
+                    if (currentUser.getFollowings()
+                            .contains(posts.get(i).getAuthor().getObjectId())) {
+                        Log.i(TAG, "Post: " + posts.get(i).getDescription()
+                                + ", username: " + posts.get(i).getAuthorUsername());
+
+                        followingPosts.add(posts.get(i));
+                    }
+                    // keep track of the oldest post queried
+                    // upon load more request, load posts only older than this date.
+                    if (i == posts.size() - 1) {
+                        oldestFollowingPost = posts.get(i).getCreatedAt();
+                    }
+                }
+                if (followingPosts.isEmpty() && !posts.isEmpty()) {
+                    loadNextDataForFollowing();
+                }
+                adapter.addAll(followingPosts);
+                swipeContainer.setRefreshing(false);
+                allFollowingPosts.addAll(followingPosts);
+            }
+        });
+    }
+
+    public static void getFollowingPosts() {
+        adapter.addAll(allFollowingPosts);
     }
 
     public static void queryNearbyPosts(Activity activity) {

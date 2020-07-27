@@ -38,6 +38,7 @@ public abstract class BaseFragment extends Fragment {
     protected RecyclerView rvPosts;
     protected static SwipeRefreshLayout swipeContainer;
     protected EndlessRecyclerViewScrollListener scrollListener;
+    protected EndlessRecyclerViewScrollListener scrollListenerForFollowing;
     protected EndlessRecyclerViewScrollListener scrollListenerForNearby;
     protected SwipeRefreshLayout.OnRefreshListener onRefreshListener;
     protected static Date oldestCreatedAt;
@@ -91,6 +92,14 @@ public abstract class BaseFragment extends Fragment {
         };
         // Adds the scroll listener to RecyclerView
         rvPosts.addOnScrollListener(scrollListener);
+
+        scrollListenerForFollowing = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(long page, int totalItemsCount, RecyclerView view) {
+                Log.i(TAG, "onLoadMore for following posts!");
+                QueryPosts.loadNextDataForFollowing();
+            }
+        };
 
         scrollListenerForNearby = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override

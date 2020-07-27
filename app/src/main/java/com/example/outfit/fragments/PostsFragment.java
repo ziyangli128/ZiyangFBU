@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,8 +25,10 @@ import com.example.outfit.helpers.EndlessRecyclerViewScrollListener;
 import com.example.outfit.helpers.QueryPosts;
 import com.example.outfit.R;
 import com.example.outfit.adapters.PostsAdapter;
+import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
 import com.google.android.material.tabs.TabLayout;
+import com.parse.ParseUser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,11 +52,14 @@ public class PostsFragment extends BaseFragment {
     private ImageView ivGoBack;
     protected static List<Post> allPosts;
     protected static List<Post> searchedPosts;
+    public static List<Post> allFollowingPosts;
     public static List<Post> allNearbyPosts;
-    public int count = 0;
+    public int countFollowing = 0;
+    public int countNearby = 0;
 
 
     int[] postsPosition;
+    int[] followingPostsPosition;
     int[] nearbyPostsPosition;
 
 
@@ -101,16 +107,36 @@ public class PostsFragment extends BaseFragment {
                         rvPosts.scrollToPosition(postsPosition[0]);
                         break;
                     case 1:
-                        queryTrendingPosts();
-                        break;
-                    case 2:
-                        if (count == 0) {
-                            queryNearbyPosts(getActivity());
-                            count++;
+                        if (((Author) ParseUser.getCurrentUser().getParseObject("author"))
+                                .getFollowings() != null) {
+                            if (countFollowing == 0) {
+                                queryFollowingPosts();
+                                countFollowing++;
+                            } else {
+                                QueryPosts.getFollowingPosts();
+                                rvPosts.scrollToPosition(followingPostsPosition[0]);
+                            }
+                            rvPosts.clearOnScrollListeners();
+                            rvPosts.addOnScrollListener(scrollListenerForFollowing);
+                            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                                @Override
+                                public void onRefresh() {
+                                    Log.i(TAG, "onRefresh for following Posts");
+                                    QueryPosts.queryFollowingPosts();
+                                }
+                            });
+                            break;
                         } else {
+                            Toast.makeText(getContext(), R.string.no_following, Toast.LENGTH_SHORT).show();
+                            break;
+                        }
 
+                    case 2:
+                        if (countNearby == 0) {
+                            queryNearbyPosts(getActivity());
+                            countNearby++;
+                        } else {
                             QueryPosts.getNearbyPosts();
-                            Log.i(TAG, "onTabSelected: " +adapter.getItemCount());
                             rvPosts.scrollToPosition(nearbyPostsPosition[0]);
                         }
                         rvPosts.clearOnScrollListeners();
@@ -122,8 +148,6 @@ public class PostsFragment extends BaseFragment {
                                 QueryPosts.queryNearbyPosts(getActivity());
                             }
                         });
-
-
                         break;
                 }
             }
@@ -137,6 +161,7 @@ public class PostsFragment extends BaseFragment {
                         adapter.clear();
                         break;
                     case 1:
+                        followingPostsPosition = layoutManager.findFirstCompletelyVisibleItemPositions(null);
                         adapter.clear();
                         break;
                     case 2:
@@ -161,9 +186,7 @@ public class PostsFragment extends BaseFragment {
         QueryPosts.queryPosts(null);
     }
 
-    public static void queryTrendingPosts() {
-
-    }
+    public static void queryFollowingPosts() { QueryPosts.queryFollowingPosts(); }
 
     public static void queryNearbyPosts(Activity activity) {
         QueryPosts.queryNearbyPosts(activity);

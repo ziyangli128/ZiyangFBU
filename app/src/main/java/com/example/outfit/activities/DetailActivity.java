@@ -149,7 +149,6 @@ public class DetailActivity extends AppCompatActivity{
                     i.putExtra("brand", brand);
                     startActivity(i);
                 }
-
             }
         });
     }

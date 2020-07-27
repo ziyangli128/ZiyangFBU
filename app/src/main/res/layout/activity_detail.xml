@@ -17,34 +17,47 @@
         app:titleTextColor="@android:color/white"
         tools:visibility="visible">
 
-        <ImageView
-            android:id="@+id/ivProfileImage"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            tools:srcCompat="@tools:sample/avatars" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tvUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            tools:text="Ziyang" />
+            <ImageView
+                android:id="@+id/ivProfileImage"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                tools:srcCompat="@tools:sample/avatars" />
 
-        <Button
-            android:id="@+id/btnFollow"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/follow" />
+            <TextView
+                android:id="@+id/tvUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/ivProfileImage"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                tools:text="Ziyang" />
+
+            <Button
+                android:id="@+id/btnFollow"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="0dp"
+                android:text="@string/follow" />
+        </RelativeLayout>
+
+
 
     </androidx.appcompat.widget.Toolbar>
 
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="610dp">
+        android:layout_height="620dp">
 
         <LinearLayout
             android:layout_width="match_parent"

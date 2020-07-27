@@ -13,16 +13,16 @@
         android:layout_height="40dp">
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabNow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_now" />
+
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/tabFollowing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tab_following" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabTrending"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tab_trending" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabNearby"
