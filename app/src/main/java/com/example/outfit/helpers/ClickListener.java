@@ -1,17 +1,22 @@
 package com.example.outfit.helpers;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.outfit.R;
 import com.example.outfit.activities.DetailActivity;
@@ -23,8 +28,11 @@ import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
 import com.parse.ParseUser;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class ClickListener {
 
@@ -131,6 +139,43 @@ public class ClickListener {
                 Intent i = new Intent(context, MapsActivity.class);
                 ((Activity) context).startActivity(i);
             }
+        });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public static void setDoubleTapListener(final ImageView ivImage, final Context context, final ImageView ivLike,
+                                            final Post post, final String TAG, final int position,
+                                            final List<Post> posts, final int REQUEST_CODE) {
+        ivImage.setOnTouchListener(new OnTapListener(context) {
+
+            @Override
+            public void onDoubleTap(MotionEvent e) {
+                Log.i(TAG, "onClick: " + post.getLikes());
+                if (post.getLikes().contains(ParseUser.getCurrentUser().getObjectId())) {
+                    post.removeLikes(ParseUser.getCurrentUser().getObjectId());
+                    post.saveInBackground();
+                    ivLike.setSelected(false);
+                } else {
+                    post.setLikes(ParseUser.getCurrentUser().getObjectId());
+                    post.saveInBackground();
+                    ivLike.setSelected(true);
+                }
+            }
+            
+            public void onSingleTapConfirmed(MotionEvent e) {
+                Log.i(TAG, "onClick: " + TAG);
+                // make sure the position is valid, i.e. actually exists in the view
+                if (position != RecyclerView.NO_POSITION) {
+                    // get the post clicked on
+                    Post post = posts.get(position);
+                    Intent i = new Intent(context, DetailActivity.class);
+                    // serialize the movie using parceler, use its short name as a key
+                    i.putExtra("post", Parcels.wrap(post));
+                    i.putExtra("position", position);
+                    ((Activity) context).startActivityForResult(i, REQUEST_CODE);
+                }
+            }
+
         });
     }
 }

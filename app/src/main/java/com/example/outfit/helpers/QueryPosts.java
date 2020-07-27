@@ -81,8 +81,8 @@ public class QueryPosts extends PostsFragment {
     }
 
     // Append the next page of data into the adapter
-    public static void loadNextData(long page, final boolean loadSearch, @Nullable final String search,
-                                    @Nullable Author author) {
+    public static void loadNextData(long page, final boolean loadSearch,
+                                    @Nullable final String search, @Nullable final Author author) {
         // specify the class to query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_AUTHOR);
@@ -92,6 +92,7 @@ public class QueryPosts extends PostsFragment {
         if (author != null) {
             query.whereEqualTo(Post.KEY_AUTHOR, author);
         }
+
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
@@ -119,7 +120,6 @@ public class QueryPosts extends PostsFragment {
                     }
                     adapter.addAll(searchedPosts);
                 }
-
                 swipeContainer.setRefreshing(false);
 
             }

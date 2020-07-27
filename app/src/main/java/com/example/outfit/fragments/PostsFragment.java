@@ -27,8 +27,13 @@ import com.example.outfit.adapters.PostsAdapter;
 import com.example.outfit.models.Post;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -46,6 +51,7 @@ public class PostsFragment extends BaseFragment {
     protected static List<Post> searchedPosts;
     public static List<Post> allNearbyPosts;
     public int count = 0;
+
 
     int[] postsPosition;
     int[] nearbyPostsPosition;
@@ -170,12 +176,17 @@ public class PostsFragment extends BaseFragment {
             @Override
             public boolean onQueryTextSubmit(final String s) {
                 Log.i(TAG, "onQueryTextSubmit: submit search request: " + s);
+
                 searchedPosts = new ArrayList<>();
                 for (Post post: allPosts) {
                     if (post.getTags().contains(s.toLowerCase())) {
                         searchedPosts.add(post);
                     }
                 }
+
+                int postsSize = allPosts.size();
+                Log.i(TAG, "onQueryTextSubmit: " + allPosts.size());
+
                 if (searchedPosts.isEmpty()) {
                     Toast.makeText(getContext(), R.string.empty_search, Toast.LENGTH_SHORT).show();
                 } else {

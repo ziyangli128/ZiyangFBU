@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.outfit.R;
 import com.example.outfit.databinding.ActivityMainBinding;
@@ -24,8 +23,6 @@ import com.example.outfit.models.Post;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.parceler.Parcels;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_compose:
                         Log.i(TAG, "onNavigationItemSelected: compose" + fragmentManager.getBackStackEntryCount());
-                        //Log.i(TAG, "onNavigationItemSelected: " + fragmentManager.getPrimaryNavigationFragment().toString());
                         fragmentManager.beginTransaction().addToBackStack("To compose")
                                 .replace(R.id.flContainer, composeFragment).commit();
                         break;

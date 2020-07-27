@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -121,6 +123,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             
             ClickListener.setIvLikeClickListener(post, ivLike, TAG);
             ClickListener.setIvProfileClickListener(post, ivProfile, TAG);
+            ClickListener.setDoubleTapListener(ivImage, context, ivLike, post, TAG,
+                    getAdapterPosition(), posts, REQUEST_CODE);
         }
 
         @Override
