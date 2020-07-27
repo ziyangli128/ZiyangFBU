@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.outfit.activities.DetailActivity;
+import com.example.outfit.activities.MainActivity;
 import com.example.outfit.helpers.ClickListener;
 import com.example.outfit.R;
 import com.example.outfit.models.Post;
@@ -83,7 +84,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private TextView tvTitle;
         protected ImageView ivProfile;
         private TextView tvUsername;
-        protected ImageView ivLike;
+        protected View ivLike;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -120,7 +121,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             } else {
                 ivLike.setSelected(false);
             }
-            
+
+
             ClickListener.setIvLikeClickListener(post, ivLike, TAG);
             ClickListener.setIvProfileClickListener(post, ivProfile, TAG);
             ClickListener.setDoubleTapListener(ivImage, context, ivLike, post, TAG,

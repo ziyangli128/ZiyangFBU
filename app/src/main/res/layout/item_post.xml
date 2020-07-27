@@ -65,7 +65,11 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     app:srcCompat="@drawable/ic_like_selector" />
+
+
             </LinearLayout>
+
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

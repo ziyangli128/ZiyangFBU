@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -27,6 +28,7 @@ import com.example.outfit.fragments.ProfileFragment;
 import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
 import com.parse.ParseUser;
+import com.plattysoft.leonids.ParticleSystem;
 
 import org.parceler.Parcels;
 
@@ -40,7 +42,7 @@ public class ClickListener {
     public static final String KEY_FOLLOWERS = "followers";
     public static final String KEY_FOLLOWINGS = "followings";
 
-    public static void setIvLikeClickListener(final Post post, final ImageView ivLike, final String TAG) {
+    public static void setIvLikeClickListener(final Post post, final View ivLike, final String TAG) {
         ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,6 +58,7 @@ public class ClickListener {
                 }
             }
         });
+
     }
 
     public static void setIvProfileClickListener(final Post post, final ImageView ivProfile,
@@ -74,14 +77,13 @@ public class ClickListener {
 
                 FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.flContainer, fragment);
-//                activity.getSupportFragmentManager().popBackStack();
                 ft.addToBackStack("to profile");
                 ft.commit();
             }
         });
     }
 
-    public static void setIvFavoriteClickListener(final Post post, final ImageView ivFavorite, final String TAG) {
+    public static void setIvFavoriteClickListener(final Post post, final View ivFavorite, final String TAG) {
         ivFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,9 +145,10 @@ public class ClickListener {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    public static void setDoubleTapListener(final ImageView ivImage, final Context context, final ImageView ivLike,
+    public static void setDoubleTapListener(final ImageView ivImage, final Context context, final View ivLike,
                                             final Post post, final String TAG, final int position,
-                                            final List<Post> posts, final int REQUEST_CODE) {
+                                            @Nullable final List<Post> posts,
+                                            final int REQUEST_CODE) {
         ivImage.setOnTouchListener(new OnTapListener(context) {
 
             @Override
@@ -159,21 +162,33 @@ public class ClickListener {
                     post.setLikes(ParseUser.getCurrentUser().getObjectId());
                     post.saveInBackground();
                     ivLike.setSelected(true);
+
+                    new ParticleSystem((Activity) context, 80,
+                            R.drawable.ic_heart_active, 10000)
+                            .setSpeedModuleAndAngleRange(0.5f, 0.5f, 0, 360)
+                            .setRotationSpeed(144)
+                            .setAcceleration(0.00005f, 90)
+                            .oneShot(ivImage, 16);
                 }
+
+
             }
             
             public void onSingleTapConfirmed(MotionEvent e) {
-                Log.i(TAG, "onClick: " + TAG);
-                // make sure the position is valid, i.e. actually exists in the view
-                if (position != RecyclerView.NO_POSITION) {
-                    // get the post clicked on
-                    Post post = posts.get(position);
-                    Intent i = new Intent(context, DetailActivity.class);
-                    // serialize the movie using parceler, use its short name as a key
-                    i.putExtra("post", Parcels.wrap(post));
-                    i.putExtra("position", position);
-                    ((Activity) context).startActivityForResult(i, REQUEST_CODE);
+                if (position != -1) {
+                    Log.i(TAG, "onClick: " + TAG);
+                    // make sure the position is valid, i.e. actually exists in the view
+                    if (position != RecyclerView.NO_POSITION) {
+                        // get the post clicked on
+                        Post post = posts.get(position);
+                        Intent i = new Intent(context, DetailActivity.class);
+                        // serialize the movie using parceler, use its short name as a key
+                        i.putExtra("post", Parcels.wrap(post));
+                        i.putExtra("position", position);
+                        ((Activity) context).startActivityForResult(i, REQUEST_CODE);
+                    }
                 }
+
             }
 
         });
