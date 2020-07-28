@@ -40,6 +40,7 @@ public abstract class BaseFragment extends Fragment {
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected EndlessRecyclerViewScrollListener scrollListenerForFollowing;
     protected EndlessRecyclerViewScrollListener scrollListenerForNearby;
+    protected EndlessRecyclerViewScrollListener scrollListenerForFavorites;
     protected SwipeRefreshLayout.OnRefreshListener onRefreshListener;
     protected static Date oldestCreatedAt;
 

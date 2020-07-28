@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_profile:
                     default:
-                        Log.i(TAG, "onNavigationItemSelected: myporfile" + fragmentManager.getBackStackEntryCount());
+                        Log.i(TAG, "onNavigationItemSelected: my porfile" + fragmentManager.getBackStackEntryCount());
                         fragmentManager.beginTransaction().addToBackStack("To myProfile")
                                 .replace(R.id.flContainer, myProfileFragment).commit();
                         break;

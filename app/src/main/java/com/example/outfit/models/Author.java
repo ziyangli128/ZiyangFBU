@@ -13,7 +13,7 @@ import java.util.Collections;
 @ParseClassName("Author")
 public class Author extends ParseObject {
 
-    public static final String KEY_FAVORITES = "collection";
+    public static final String KEY_FAVORITES = "favorites";
     public static final String KEY_FOLLOWERS = "followers";
     public static final String KEY_FOLLOWINGS = "followings";
     public static final String KEY_USERNAME = "username";

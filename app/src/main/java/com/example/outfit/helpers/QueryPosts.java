@@ -35,7 +35,7 @@ public class QueryPosts extends PostsFragment {
     public static int begin = 0;
     public static int end = 15;
     public static Date oldestFollowingPost;
-
+    public static Date oldestFavoritesPost;
     // query posts from the parse database
     // assertion
     // annotate with background thread
@@ -302,5 +302,76 @@ public class QueryPosts extends PostsFragment {
         int pivot = partition(posts, begin, end);
         quickSort(posts, begin, pivot-1);
         quickSort(posts, pivot+1, end);
+    }
+
+    public static void queryFavoritePosts() {
+        Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
+        ArrayList favorites = currentUser.getFavorites();
+        List<Post> favoritePosts = new ArrayList<>();
+        Log.i(TAG, "queryFavoritePosts: " + favorites.size());
+        if (favorites != null) {
+            for (int i = 0; i < allPosts.size(); i++) {
+                for (int j = 0; j < favorites.size(); j++) {
+                    if (allPosts.get(i).getObjectId().equals(favorites.get(j).toString())) {
+                        favoritePosts.add(allPosts.get(i));
+                    }
+                }
+            }
+            adapter.clear();
+            adapter.addAll(favoritePosts);
+            oldestFavoritesPost = oldestCreatedAt;
+            swipeContainer.setRefreshing(false);
+            if (favoritePosts.size() != favorites.size()) {
+                Log.i(TAG, "queryFavoritePosts: sfsdfsdf");
+                loadNextDataForFavorites();
+            }
+        }
+
+    }
+
+    public static void loadNextDataForFavorites() {
+        // specify the class to query
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.KEY_AUTHOR);
+        query.setLimit(LIMIT);
+        query.whereLessThan(Post.KEY_CREATED_AT, oldestFavoritesPost);
+        query.addDescendingOrder(Post.KEY_CREATED_AT);
+
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> posts, ParseException e) {
+                List<Post> favoritePosts = new ArrayList<>();
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting favorite posts.", e);
+                    return;
+                }
+                for (int i = 0; i < posts.size(); i++) {
+                    Log.i(TAG, "Post: " + posts.get(i).getDescription()
+                            + ", username: " + posts.get(i).getAuthorUsername());
+
+                    // keep track of the oldest post queried
+                    // upon load more request, load posts only older than this date.
+                    if (i == posts.size() - 1) {
+                        oldestFavoritesPost = posts.get(i).getCreatedAt();
+                    }
+                }
+
+                Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
+                ArrayList favorites = currentUser.getFavorites();
+                for (int i = 0; i < posts.size(); i++) {
+                    for (int j = 0; j < favorites.size(); j++) {
+                        if (allPosts.get(i).getObjectId().equals(favorites.get(j).toString())) {
+                            favoritePosts.add(posts.get(i));
+                        }
+                    }
+                }
+                Log.i(TAG, "done: " + favorites.size());
+                if (favorites.size() != favoritePosts.size() && !posts.isEmpty()) {
+                    loadNextDataForFavorites();
+                }
+                adapter.addAll(favoritePosts);
+                swipeContainer.setRefreshing(false);
+            }
+        });
     }
 }

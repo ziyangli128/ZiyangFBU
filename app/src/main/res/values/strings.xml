@@ -34,6 +34,8 @@
     <string name="tab_now">Now</string>
     <string name="tab_following">Following</string>
     <string name="tab_nearby">Nearby</string>
+    <string name="tab_myPosts">Posts</string>
+    <string name="tab_favorites">Favorites</string>
     <string name="search">Search clothing styles here.</string>
     <string name="empty_search">No such posts. Please try with other keywords.</string>
     <string name="no_following">You have no followings!</string>

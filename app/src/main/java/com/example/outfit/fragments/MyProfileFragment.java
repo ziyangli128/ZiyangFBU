@@ -12,10 +12,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.outfit.R;
 import com.example.outfit.activities.LoginActivity;
+import com.example.outfit.helpers.EndlessRecyclerViewScrollListener;
+import com.example.outfit.helpers.QueryPosts;
 import com.example.outfit.models.Author;
+import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -25,7 +30,8 @@ import com.parse.ParseUser;
 public class MyProfileFragment extends ProfileFragment {
 
     public static final String TAG = "MyProfileFragment";
-    Button btnLogout;
+    private Button btnLogout;
+    private TabLayout tabMyPosts;
 
     public MyProfileFragment() {
         try {
@@ -59,6 +65,42 @@ public class MyProfileFragment extends ProfileFragment {
                 } else {
                     goLoginActivity();
                 }
+            }
+        });
+
+        tabMyPosts = view.findViewById(R.id.tabMyPosts);
+        tabMyPosts.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                    default:
+                        queryMyPosts();
+                        swipeContainer.setEnabled(true);
+                        break;
+                    case 1:
+                        QueryPosts.queryFavoritePosts();
+                        swipeContainer.setEnabled(false);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                    default:
+                        adapter.clear();
+                        break;
+                    case 1:
+                        adapter.clear();
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                rvProfilePosts.smoothScrollToPosition(0);
             }
         });
     }

@@ -111,7 +111,7 @@ public class DetailActivity extends AppCompatActivity{
             binding.ivLike.setSelected(false);
         }
 
-        if (post.getFavorites().contains(ParseUser.getCurrentUser().getObjectId())) {
+        if (post.getFavorites().contains(ParseUser.getCurrentUser().getParseObject("author").getObjectId())) {
             binding.ivFavorite.setSelected(true);
         } else {
             binding.ivFavorite.setSelected(false);

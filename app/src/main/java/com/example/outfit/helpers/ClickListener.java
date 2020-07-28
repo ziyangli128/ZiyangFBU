@@ -38,7 +38,7 @@ import java.util.List;
 
 public class ClickListener {
 
-    public static final String KEY_FAVORITES = "collection";
+    public static final String KEY_FAVORITES = "favorites";
     public static final String KEY_FOLLOWERS = "followers";
     public static final String KEY_FOLLOWINGS = "followings";
 
@@ -87,10 +87,10 @@ public class ClickListener {
         ivFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ParseUser currentUser = ParseUser.getCurrentUser();
+                Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
                 Log.i(TAG, "onClick: set favorite" + post.getFavorites());
-                if (post.getFavorites().contains(ParseUser.getCurrentUser().getObjectId())) {
-                    post.removeFavorites(ParseUser.getCurrentUser().getObjectId());
+                if (post.getFavorites().contains(currentUser.getObjectId())) {
+                    post.removeFavorites(currentUser.getObjectId());
                     post.saveInBackground();
                     currentUser.removeAll(KEY_FAVORITES, Collections.singleton(post.getObjectId()));
                     currentUser.saveInBackground();
@@ -98,7 +98,7 @@ public class ClickListener {
                 } else {
                     currentUser.add(KEY_FAVORITES, post.getObjectId());
                     currentUser.saveInBackground();
-                    post.setFavorites(ParseUser.getCurrentUser().getObjectId());
+                    post.setFavorites(currentUser.getObjectId());
                     post.saveInBackground();
                     ivFavorite.setSelected(true);
                 }

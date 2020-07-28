@@ -121,11 +121,30 @@
 
         </RelativeLayout>
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabMyPosts"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabPosts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_myPosts" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabFavorites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_favorites" />
+
+        </com.google.android.material.tabs.TabLayout>
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeContainer"
             android:layout_width="match_parent"
-            android:layout_height="416dp"
-            android:layout_marginTop="10dp">
+            android:layout_height="416dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvProfilePosts"
