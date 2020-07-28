@@ -116,10 +116,6 @@ public abstract class BaseFragment extends Fragment {
     public abstract void queryMyPosts();
 
     public void updatePosts(Post post, int position) {
-        Log.i(TAG, "updatePosts: ");
-        Log.i(TAG, "updatePosts: ");
-//        posts.remove(position);
-//        posts.add(position, post);
-//        adapter.notifyDataSetChanged();
+
     }
 }

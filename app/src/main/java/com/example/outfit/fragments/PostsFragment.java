@@ -64,23 +64,23 @@ public class PostsFragment extends BaseFragment {
 
         viewPager.getPagerTitleStrip().setViewPager(viewPager.getViewPager());
 
-//        viewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
-//            @Override
-//            public HeaderDesign getHeaderDesign(int page) {
-//                switch (page) {
-//                    case 0:
-//                        return HeaderDesign.fromColorResAndDrawable(
-//                                R.color.quantum_pink50, getResources().getDrawable(R.drawable.cover_home_1));
-//                    case 1:
-//                        return HeaderDesign.fromColorResAndDrawable(
-//                                R.color.lime, getResources().getDrawable(R.drawable.cover_home_2));
-//                    case 2:
-//                        return HeaderDesign.fromColorResAndDrawable(
-//                                R.color.cyan,getResources().getDrawable(R.drawable.cover_home_3));
-//                }
-//                return null;
-//            }
-//        });
+        viewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
+            @Override
+            public HeaderDesign getHeaderDesign(int page) {
+                switch (page) {
+                    case 0:
+                        return HeaderDesign.fromColorResAndDrawable(
+                                R.color.quantum_pink50, getResources().getDrawable(R.drawable.cover_home_1));
+                    case 1:
+                        return HeaderDesign.fromColorResAndDrawable(
+                                R.color.lime, getResources().getDrawable(R.drawable.cover_home_2));
+                    case 2:
+                        return HeaderDesign.fromColorResAndDrawable(
+                                R.color.cyan,getResources().getDrawable(R.drawable.cover_home_3));
+                }
+                return null;
+            }
+        });
 
     }
 
