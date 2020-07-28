@@ -13,6 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.outfit.R;
 import com.example.outfit.adapters.PostsAdapter;
@@ -36,6 +39,12 @@ public abstract class BaseFragment extends Fragment {
     protected StaggeredGridLayoutManager layoutManager;
     protected List<Post> posts;
     protected RecyclerView rvPosts;
+    protected SearchView svSearch;
+    protected ImageView ivGoBack;
+    protected static List<Post> allPosts;
+    protected static List<Post> searchedPosts;
+    public static List<Post> allFollowingPosts;
+    public static List<Post> allNearbyPosts;
     protected static SwipeRefreshLayout swipeContainer;
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected EndlessRecyclerViewScrollListener scrollListenerForFollowing;
@@ -51,7 +60,7 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_posts, container, false);
+        return inflater.inflate(R.layout.fragment_tab_posts, container, false);
     }
 
     @Override
@@ -61,6 +70,9 @@ public abstract class BaseFragment extends Fragment {
         rvPosts = view.findViewById(R.id.rvPosts);
         layoutManager = new StaggeredGridLayoutManager(SPAN_COUNT, 1);
         rvPosts.setLayoutManager(layoutManager);
+        svSearch = view.findViewById(R.id.svSearch);
+        ivGoBack = view.findViewById(R.id.ivGoBack);
+        ivGoBack.setVisibility(View.GONE);
 
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
@@ -93,29 +105,15 @@ public abstract class BaseFragment extends Fragment {
         // Adds the scroll listener to RecyclerView
         rvPosts.addOnScrollListener(scrollListener);
 
-        scrollListenerForFollowing = new EndlessRecyclerViewScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(long page, int totalItemsCount, RecyclerView view) {
-                Log.i(TAG, "onLoadMore for following posts!");
-                QueryPosts.loadNextDataForFollowing();
-            }
-        };
-
-        scrollListenerForNearby = new EndlessRecyclerViewScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(long page, int totalItemsCount, RecyclerView view) {
-                Log.i(TAG, "onLoadMore for nearby posts!");
-                QueryPosts.loadNextDataForNearby();
-            }
-        };
     }
 
     public abstract void queryMyPosts();
-    
+
     public void updatePosts(Post post, int position) {
         Log.i(TAG, "updatePosts: ");
-        posts.remove(position);
-        posts.add(position, post);
-        adapter.notifyDataSetChanged();
+        Log.i(TAG, "updatePosts: ");
+//        posts.remove(position);
+//        posts.add(position, post);
+//        adapter.notifyDataSetChanged();
     }
 }

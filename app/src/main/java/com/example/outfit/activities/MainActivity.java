@@ -11,12 +11,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.outfit.R;
 import com.example.outfit.databinding.ActivityMainBinding;
 import com.example.outfit.fragments.BaseFragment;
 import com.example.outfit.fragments.ComposeFragment;
+import com.example.outfit.fragments.FollowingPostsFragment;
 import com.example.outfit.fragments.MyProfileFragment;
+import com.example.outfit.fragments.NearbyPostsFragment;
+import com.example.outfit.fragments.NewPostsFragment;
 import com.example.outfit.fragments.PostsFragment;
 import com.example.outfit.fragments.ProfileFragment;
 import com.example.outfit.models.Post;
@@ -89,7 +93,23 @@ public class MainActivity extends AppCompatActivity {
             // Update the Recycler View with the new post
             // Modify data source of posts
             // Update the adapter
-            ((BaseFragment) fragmentManager.findFragmentById(R.id.flContainer)).updatePosts(post, position);
+            if (fragmentManager.findFragmentById(R.id.flContainer).toString().contains("ProfileFragment")) {
+                ((ProfileFragment) fragmentManager.findFragmentById(R.id.flContainer)).updatePosts(post, position);
+            } else {
+                if (((PostsFragment)fragmentManager.findFragmentById(R.id.flContainer))
+                        .getViewPager().getCurrentItem() == 0) {
+                    ((NewPostsFragment) fragmentManager.findFragmentById(R.id.flContainer).getChildFragmentManager()
+                            .findFragmentByTag("android:switcher:" + R.id.pager + ":" + 0)).updatePosts(post, position);
+                } else if (((PostsFragment)fragmentManager.findFragmentById(R.id.flContainer))
+                        .getViewPager().getCurrentItem() == 1) {
+                    ((FollowingPostsFragment) fragmentManager.findFragmentById(R.id.flContainer).getChildFragmentManager()
+                            .findFragmentByTag("android:switcher:" + R.id.pager + ":" + 1)).updatePosts(post, position);
+                } else {
+                    ((NearbyPostsFragment) fragmentManager.findFragmentById(R.id.flContainer).getChildFragmentManager()
+                            .findFragmentByTag("android:switcher:" + R.id.pager + ":" + 2)).updatePosts(post, position);
+                }
+            }
+
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

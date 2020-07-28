@@ -14,6 +14,7 @@ import androidx.annotation.WorkerThread;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.outfit.adapters.PostsAdapter;
+import com.example.outfit.fragments.BaseFragment;
 import com.example.outfit.fragments.PostsFragment;
 import com.example.outfit.models.Author;
 import com.example.outfit.models.Post;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class QueryPosts extends PostsFragment {
+public class QueryPosts extends BaseFragment {
     // set the number of posts to query at a single time
     public static final int LIMIT = 6;
     public static final String TAG = "QueryPosts";
@@ -37,10 +38,8 @@ public class QueryPosts extends PostsFragment {
     public static Date oldestFollowingPost;
     public static Date oldestFavoritesPost;
     public static Date oldestMyPostCreatedAt;
-    // query posts from the parse database
-    // assertion
-    // annotate with background thread
 
+    // query posts from the parse database
     public static void queryPosts(@Nullable final Author author, final PostsAdapter postsAdapter) {
 
         new Thread(new Runnable() {
@@ -109,6 +108,7 @@ public class QueryPosts extends PostsFragment {
                     Log.e(TAG, "Issue with getting posts.", e);
                     return;
                 }
+                int postsNumber = allPosts.size();
                 for (int i = 0; i < posts.size(); i++) {
                     Log.i(TAG, "Post: " + posts.get(i).getDescription()
                             + ", username: " + posts.get(i).getAuthorUsername());
@@ -121,14 +121,16 @@ public class QueryPosts extends PostsFragment {
                         }
                     }
                 }
-                int postsNumber = allPosts.size();
 
                 if (!loadSearch) {
                     postsAdapter.addAll(posts);
                 } else {
                     List<Post> searchedPosts = new ArrayList<>();
+                    Log.i(TAG, "done: " + postsNumber);
+                    Log.i(TAG, "done: " + allPosts.size());
                     for (int i = postsNumber; i < allPosts.size(); i++) {
                         if (allPosts.get(i).getTags().contains(search.toLowerCase())) {
+                            Log.i(TAG, "done: " + allPosts.get(i).getTitle());
                             searchedPosts.add(allPosts.get(i));
                         }
                     }
@@ -138,7 +140,7 @@ public class QueryPosts extends PostsFragment {
         });
     }
 
-    public static void queryFollowingPosts() {
+    public static void queryFollowingPosts(final PostsAdapter adapter) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -175,7 +177,7 @@ public class QueryPosts extends PostsFragment {
                             }
                         }
                         if (followingPosts.isEmpty() && !posts.isEmpty()) {
-                            loadNextDataForFollowing();
+                            loadNextDataForFollowing(adapter, false, null);
                         }
                         adapter.clear();
                         adapter.addAll(followingPosts);
@@ -187,7 +189,8 @@ public class QueryPosts extends PostsFragment {
         }).start();
     }
 
-    public static void loadNextDataForFollowing() {
+    public static void loadNextDataForFollowing(final PostsAdapter adapter, final boolean loadSearch,
+                                                @Nullable final String search) {
         // specify the class to query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_AUTHOR);
@@ -205,6 +208,7 @@ public class QueryPosts extends PostsFragment {
                     Log.e(TAG, "Issue with getting following posts.", e);
                     return;
                 }
+                int postsNumber = allFollowingPosts.size();
                 for (int i = 0; i < posts.size(); i++) {
                     Log.i(TAG, "Post: " + posts.get(i).getDescription()
                             + ", username: " + posts.get(i).getAuthorUsername());
@@ -222,20 +226,28 @@ public class QueryPosts extends PostsFragment {
                     }
                 }
                 if (followingPosts.isEmpty() && !posts.isEmpty()) {
-                    loadNextDataForFollowing();
+                    loadNextDataForFollowing(adapter, false, null);
                 }
-                adapter.addAll(followingPosts);
                 swipeContainer.setRefreshing(false);
                 allFollowingPosts.addAll(followingPosts);
+
+                if (!loadSearch) {
+                    adapter.addAll(followingPosts);
+                } else {
+                    List<Post> searchedPosts = new ArrayList<>();
+                    for (int i = postsNumber; i < allFollowingPosts.size(); i++) {
+                        if (allFollowingPosts.get(i).getTags().contains(search.toLowerCase())) {
+                            Log.i(TAG, "done: " + allFollowingPosts.get(i).getTitle());
+                            searchedPosts.add(allFollowingPosts.get(i));
+                        }
+                    }
+                    adapter.addAll(searchedPosts);
+                }
             }
         });
     }
 
-    public static void getFollowingPosts() {
-        adapter.addAll(allFollowingPosts);
-    }
-
-    public static void queryNearbyPosts(Activity activity) {
+    public static void queryNearbyPosts(Activity activity, final PostsAdapter adapter) {
         final ParseGeoPoint currentUserLocation = SavePost.saveCurrentUserLocation(activity);
         new Thread(new Runnable() {
             @Override
@@ -273,18 +285,13 @@ public class QueryPosts extends PostsFragment {
         }).start();
     }
 
-    public static void getNearbyPosts() {
-        adapter.addAll(allNearbyPosts);
-    }
-
-    public static void loadNextDataForNearby() {
+    public static void loadNextDataForNearby(PostsAdapter adapter) {
         begin = begin + 15;
         end = end + 15;
         Log.i(TAG, "loadNextDataForNearby: ");
         if (allNearbyPosts.size() > end) {
             adapter.addAll(allNearbyPosts.subList(begin, end));
         } else if (allNearbyPosts.size() > begin){
-
             adapter.addAll(allNearbyPosts.subList(begin, allNearbyPosts.size()));
         }
     }
@@ -382,5 +389,10 @@ public class QueryPosts extends PostsFragment {
                 swipeContainer.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    public void queryMyPosts() {
+
     }
 }

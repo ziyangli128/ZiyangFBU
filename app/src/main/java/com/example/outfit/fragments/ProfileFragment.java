@@ -159,4 +159,10 @@ public class ProfileFragment extends Fragment {
     public void queryMyPosts() {
         QueryPosts.queryPosts(author, profileAdapter);
     }
+
+    public void updatePosts(Post post, int position) {
+        posts.remove(position);
+        posts.add(position, post);
+        profileAdapter.notifyDataSetChanged();
+    }
 }
