@@ -57,14 +57,12 @@ public class PostsFragment extends BaseFragment {
     public int countFollowing = 0;
     public int countNearby = 0;
 
-
     int[] postsPosition;
     int[] followingPostsPosition;
     int[] nearbyPostsPosition;
 
 
     public PostsFragment() {
-
         // Required empty public constructor
     }
 
@@ -183,7 +181,7 @@ public class PostsFragment extends BaseFragment {
 
     @Override
     public void queryMyPosts() {
-        QueryPosts.queryPosts(null);
+        QueryPosts.queryPosts(null, adapter);
     }
 
     public static void queryFollowingPosts() { QueryPosts.queryFollowingPosts(); }
@@ -224,7 +222,7 @@ public class PostsFragment extends BaseFragment {
                             // Triggered only when new data needs to be appended to the list
                             // Add whatever code is needed to append new items to the bottom of the list
                             Log.i(TAG, "onLoadMore for search!");
-                            QueryPosts.loadNextData(page, true, s, null);
+                            QueryPosts.loadNextData(page, true, s, null, adapter);
                         }
                     };
 

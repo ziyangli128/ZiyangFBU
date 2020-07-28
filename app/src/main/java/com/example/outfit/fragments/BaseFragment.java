@@ -40,7 +40,6 @@ public abstract class BaseFragment extends Fragment {
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected EndlessRecyclerViewScrollListener scrollListenerForFollowing;
     protected EndlessRecyclerViewScrollListener scrollListenerForNearby;
-    protected EndlessRecyclerViewScrollListener scrollListenerForFavorites;
     protected SwipeRefreshLayout.OnRefreshListener onRefreshListener;
     protected static Date oldestCreatedAt;
 
@@ -88,7 +87,7 @@ public abstract class BaseFragment extends Fragment {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 Log.i(TAG, "onLoadMore!");
-                QueryPosts.loadNextData(page, false, null, null);
+                QueryPosts.loadNextData(page, false, null, null, adapter);
             }
         };
         // Adds the scroll listener to RecyclerView

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -33,7 +34,7 @@ import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-public class ProfileFragment extends BaseFragment {
+public class ProfileFragment extends Fragment {
 
     public static final String TAG = "ProfileFragment";
     public static final int CORNER_RADIUS = 150; // corner radius, higher value = more rounded
@@ -41,6 +42,7 @@ public class ProfileFragment extends BaseFragment {
     public static final String KEY_FAVORITES = "collection";
     public static final String KEY_FOLLOWERS = "followers";
     public static final String KEY_FOLLOWINGS = "followings";
+    public static final int SPAN_COUNT = 2;
 
     protected ImageView ivProfileImage;
     protected TextView tvUsername;
@@ -50,6 +52,11 @@ public class ProfileFragment extends BaseFragment {
     private Button btnFollow;
     private FragmentProfileBinding binding;
     protected RecyclerView rvProfilePosts;
+    protected PostsAdapter profileAdapter;
+    protected EndlessRecyclerViewScrollListener scrollListener;
+    protected static SwipeRefreshLayout swipeContainer;
+    protected SwipeRefreshLayout.OnRefreshListener onRefreshListener;
+    protected List<Post> posts;
 
     protected Author author;
 
@@ -63,7 +70,7 @@ public class ProfileFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         posts = new ArrayList<>();
-        adapter = new PostsAdapter(getContext(), posts);
+        profileAdapter = new PostsAdapter(getContext(), posts);
         queryMyPosts();
     }
 
@@ -87,7 +94,7 @@ public class ProfileFragment extends BaseFragment {
         btnFollow = view.findViewById(R.id.btnFollow);
 
         rvProfilePosts = view.findViewById(R.id.rvProfilePosts);
-        rvProfilePosts.setAdapter(adapter);
+        rvProfilePosts.setAdapter(profileAdapter);
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(SPAN_COUNT, 1);
         rvProfilePosts.setLayoutManager(layoutManager);
@@ -98,7 +105,7 @@ public class ProfileFragment extends BaseFragment {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 Log.i(TAG, "onLoadMore for profile posts!");
-                QueryPosts.loadNextData(page, false, null, author);
+                QueryPosts.loadNextData(page, false, null, author, profileAdapter);
             }
         };
         // Adds the scroll listener to RecyclerView
@@ -111,7 +118,7 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "onRefresh: fetching new data!");
-                adapter.clear();
+                profileAdapter.clear();
                 queryMyPosts();
             }
         };
@@ -149,8 +156,7 @@ public class ProfileFragment extends BaseFragment {
         }
     }
 
-    @Override
     public void queryMyPosts() {
-        QueryPosts.queryPosts(author);
+        QueryPosts.queryPosts(author, profileAdapter);
     }
 }

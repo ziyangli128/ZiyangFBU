@@ -36,11 +36,12 @@ public class QueryPosts extends PostsFragment {
     public static int end = 15;
     public static Date oldestFollowingPost;
     public static Date oldestFavoritesPost;
+    public static Date oldestMyPostCreatedAt;
     // query posts from the parse database
     // assertion
     // annotate with background thread
 
-    public static void queryPosts(@Nullable final Author author) {
+    public static void queryPosts(@Nullable final Author author, final PostsAdapter postsAdapter) {
 
         new Thread(new Runnable() {
             @Override
@@ -68,13 +69,17 @@ public class QueryPosts extends PostsFragment {
                             // keep track of the oldest post queried
                             // upon load more request, load posts only older than this date.
                             if (i == posts.size() - 1) {
-                                oldestCreatedAt = posts.get(i).getCreatedAt();
+                                if (author != null) {
+                                    oldestMyPostCreatedAt = posts.get(i).getCreatedAt();
+                                } else {
+                                    oldestCreatedAt = posts.get(i).getCreatedAt();
+                                    allPosts = new ArrayList<>(posts);
+                                }
                             }
                         }
-                        adapter.clear();
-                        adapter.addAll(posts);
+                        postsAdapter.clear();
+                        postsAdapter.addAll(posts);
                         swipeContainer.setRefreshing(false);
-                        allPosts = new ArrayList<>(posts);
                     }
                 });
             }
@@ -83,15 +88,18 @@ public class QueryPosts extends PostsFragment {
 
     // Append the next page of data into the adapter
     public static void loadNextData(long page, final boolean loadSearch,
-                                    @Nullable final String search, @Nullable final Author author) {
+                                    @Nullable final String search, @Nullable final Author author,
+                                    final PostsAdapter postsAdapter) {
         // specify the class to query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_AUTHOR);
         query.setLimit(LIMIT);
-        query.whereLessThan(Post.KEY_CREATED_AT, oldestCreatedAt);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
         if (author != null) {
             query.whereEqualTo(Post.KEY_AUTHOR, author);
+            query.whereLessThan(Post.KEY_CREATED_AT, oldestMyPostCreatedAt);
+        } else {
+            query.whereLessThan(Post.KEY_CREATED_AT, oldestCreatedAt);
         }
 
         query.findInBackground(new FindCallback<Post>() {
@@ -105,13 +113,18 @@ public class QueryPosts extends PostsFragment {
                     Log.i(TAG, "Post: " + posts.get(i).getDescription()
                             + ", username: " + posts.get(i).getAuthorUsername());
                     if (i == posts.size() - 1) {
-                        oldestCreatedAt = posts.get(i).getCreatedAt();
+                        if (author != null) {
+                            oldestMyPostCreatedAt = posts.get(i).getCreatedAt();
+                        } else {
+                            oldestCreatedAt = posts.get(i).getCreatedAt();
+                            allPosts.addAll(posts);
+                        }
                     }
                 }
                 int postsNumber = allPosts.size();
-                allPosts.addAll(posts);
+
                 if (!loadSearch) {
-                    adapter.addAll(posts);
+                    postsAdapter.addAll(posts);
                 } else {
                     List<Post> searchedPosts = new ArrayList<>();
                     for (int i = postsNumber; i < allPosts.size(); i++) {
@@ -119,10 +132,8 @@ public class QueryPosts extends PostsFragment {
                             searchedPosts.add(allPosts.get(i));
                         }
                     }
-                    adapter.addAll(searchedPosts);
+                    postsAdapter.addAll(searchedPosts);
                 }
-                swipeContainer.setRefreshing(false);
-
             }
         });
     }
@@ -304,11 +315,10 @@ public class QueryPosts extends PostsFragment {
         quickSort(posts, pivot+1, end);
     }
 
-    public static void queryFavoritePosts() {
+    public static void queryFavoritePosts(PostsAdapter postsAdapter) {
         Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
         ArrayList favorites = currentUser.getFavorites();
         List<Post> favoritePosts = new ArrayList<>();
-        Log.i(TAG, "queryFavoritePosts: " + favorites.size());
         if (favorites != null) {
             for (int i = 0; i < allPosts.size(); i++) {
                 for (int j = 0; j < favorites.size(); j++) {
@@ -317,19 +327,18 @@ public class QueryPosts extends PostsFragment {
                     }
                 }
             }
-            adapter.clear();
-            adapter.addAll(favoritePosts);
+            postsAdapter.clear();
+            postsAdapter.addAll(favoritePosts);
             oldestFavoritesPost = oldestCreatedAt;
             swipeContainer.setRefreshing(false);
             if (favoritePosts.size() != favorites.size()) {
-                Log.i(TAG, "queryFavoritePosts: sfsdfsdf");
-                loadNextDataForFavorites();
+                loadNextDataForFavorites(postsAdapter);
             }
         }
 
     }
 
-    public static void loadNextDataForFavorites() {
+    public static void loadNextDataForFavorites(final PostsAdapter postsAdapter) {
         // specify the class to query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_AUTHOR);
@@ -360,16 +369,16 @@ public class QueryPosts extends PostsFragment {
                 ArrayList favorites = currentUser.getFavorites();
                 for (int i = 0; i < posts.size(); i++) {
                     for (int j = 0; j < favorites.size(); j++) {
-                        if (allPosts.get(i).getObjectId().equals(favorites.get(j).toString())) {
+                        if (posts.get(i).getObjectId().equals(favorites.get(j).toString())) {
+                            Log.i(TAG, "queryFavoritePosts: " + posts.get(i).getTitle());
                             favoritePosts.add(posts.get(i));
                         }
                     }
                 }
-                Log.i(TAG, "done: " + favorites.size());
                 if (favorites.size() != favoritePosts.size() && !posts.isEmpty()) {
-                    loadNextDataForFavorites();
+                    loadNextDataForFavorites(postsAdapter);
                 }
-                adapter.addAll(favoritePosts);
+                postsAdapter.addAll(favoritePosts);
                 swipeContainer.setRefreshing(false);
             }
         });

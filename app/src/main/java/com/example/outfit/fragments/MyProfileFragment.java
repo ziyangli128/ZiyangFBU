@@ -75,11 +75,15 @@ public class MyProfileFragment extends ProfileFragment {
                 switch (tab.getPosition()) {
                     case 0:
                     default:
+                        rvProfilePosts.smoothScrollToPosition(0);
                         queryMyPosts();
                         swipeContainer.setEnabled(true);
+                        rvProfilePosts.addOnScrollListener(scrollListener);
                         break;
                     case 1:
-                        QueryPosts.queryFavoritePosts();
+                        rvProfilePosts.clearOnScrollListeners();
+                        rvProfilePosts.smoothScrollToPosition(0);
+                        QueryPosts.queryFavoritePosts(profileAdapter);
                         swipeContainer.setEnabled(false);
                         break;
                 }
@@ -90,10 +94,10 @@ public class MyProfileFragment extends ProfileFragment {
                 switch (tab.getPosition()) {
                     case 0:
                     default:
-                        adapter.clear();
+                        profileAdapter.clear();
                         break;
                     case 1:
-                        adapter.clear();
+                        profileAdapter.clear();
                         break;
                 }
             }
