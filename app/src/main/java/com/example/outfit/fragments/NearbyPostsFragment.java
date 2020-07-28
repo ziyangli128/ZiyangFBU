@@ -19,6 +19,8 @@ import com.example.outfit.adapters.PostsAdapter;
 import com.example.outfit.helpers.EndlessRecyclerViewScrollListener;
 import com.example.outfit.helpers.QueryPosts;
 import com.example.outfit.models.Post;
+import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,7 @@ public class NearbyPostsFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         rvPosts.setAdapter(nearbyAdapter);
+        MaterialViewPagerHelper.registerScrollView(getContext(), svPosts);
 
         scrollListenerForNearby = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -63,6 +66,7 @@ public class NearbyPostsFragment extends BaseFragment {
 
         setOnSearchPosts(nearbyAdapter);
         setOnGoBackHome(nearbyAdapter, scrollListenerForNearby);
+        swipeContainer.setEnabled(false);
     }
 
     @Override

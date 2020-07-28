@@ -2,7 +2,9 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/logo_white"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/materialviewpager_logoHeight"
-    android:text="Material is Good"
-    android:textSize="30sp"
-    android:textColor="@android:color/white"/>
+    android:layout_height="wrap_content"
+    android:fontFamily="cursive"
+    android:text="Outfits Of The Day"
+    android:textColor="@android:color/widget_edittext_dark"
+    android:textSize="36sp"
+    android:textStyle="bold" />

@@ -95,10 +95,10 @@ public class SavePost extends ComposeFragment {
                 currentUserLocation = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
             }
             else {
-                Log.i(TAG, "saveCurrentUserLocation: ");
+                Log.i(TAG, "saveCurrentUserLocation: cannot get current location.");
             }
         }
-        Log.i(TAG, "saveCurrentUserLocation: " +currentUserLocation.toString());
+
         return currentUserLocation;
     }
 }

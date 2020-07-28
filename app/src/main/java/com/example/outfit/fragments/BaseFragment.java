@@ -4,7 +4,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -36,7 +39,7 @@ public abstract class BaseFragment extends Fragment {
     public static final int SPAN_COUNT = 2;
 
     protected static PostsAdapter adapter;
-    protected StaggeredGridLayoutManager layoutManager;
+    protected GridLayoutManager layoutManager;
     protected List<Post> posts;
     protected RecyclerView rvPosts;
     protected SearchView svSearch;
@@ -51,6 +54,8 @@ public abstract class BaseFragment extends Fragment {
     protected EndlessRecyclerViewScrollListener scrollListenerForNearby;
     protected SwipeRefreshLayout.OnRefreshListener onRefreshListener;
     protected static Date oldestCreatedAt;
+
+    protected NestedScrollView svPosts;
 
     public BaseFragment() {
         // Required empty public constructor
@@ -68,11 +73,12 @@ public abstract class BaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         rvPosts = view.findViewById(R.id.rvPosts);
-        layoutManager = new StaggeredGridLayoutManager(SPAN_COUNT, 1);
+        layoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
         rvPosts.setLayoutManager(layoutManager);
         svSearch = view.findViewById(R.id.svSearch);
         ivGoBack = view.findViewById(R.id.ivGoBack);
         ivGoBack.setVisibility(View.GONE);
+        svPosts = view.findViewById(R.id.svPosts);
 
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);

@@ -5,11 +5,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -21,6 +23,8 @@ import com.example.outfit.adapters.PostsAdapter;
 import com.example.outfit.helpers.EndlessRecyclerViewScrollListener;
 import com.example.outfit.helpers.QueryPosts;
 import com.example.outfit.models.Post;
+import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
 
 import java.util.ArrayList;
 
@@ -40,7 +44,6 @@ public class NewPostsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.i("afasfsdfd", "onCreateView: sfdfsfdfsdf");
         return inflater.inflate(R.layout.fragment_tab_posts, container, false);
     }
 
@@ -48,7 +51,10 @@ public class NewPostsFragment extends BaseFragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //rvPosts.addItemDecoration(new MaterialViewPagerHeaderDecorator());
         rvPosts.setAdapter(adapter);
+        MaterialViewPagerHelper.registerScrollView(getContext(), svPosts);
+        MaterialViewPagerHelper.registerRecyclerView(getActivity(), rvPosts);
 
         setOnSearchPosts(adapter);
         setOnGoBackHome(adapter, scrollListener);

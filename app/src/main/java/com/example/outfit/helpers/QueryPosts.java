@@ -11,6 +11,7 @@ import androidx.annotation.BinderThread;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.outfit.adapters.PostsAdapter;
@@ -136,6 +137,7 @@ public class QueryPosts extends BaseFragment {
                     }
                     postsAdapter.addAll(searchedPosts);
                 }
+                swipeContainer.setRefreshing(false);
             }
         });
     }

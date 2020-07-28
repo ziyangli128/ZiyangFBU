@@ -99,14 +99,14 @@ public class MainActivity extends AppCompatActivity {
                 if (((PostsFragment)fragmentManager.findFragmentById(R.id.flContainer))
                         .getViewPager().getCurrentItem() == 0) {
                     ((NewPostsFragment) fragmentManager.findFragmentById(R.id.flContainer).getChildFragmentManager()
-                            .findFragmentByTag("android:switcher:" + R.id.pager + ":" + 0)).updatePosts(post, position);
+                            .findFragmentByTag("android:switcher:" + R.id.materialviewpager_viewpager + ":" + 0)).updatePosts(post, position);
                 } else if (((PostsFragment)fragmentManager.findFragmentById(R.id.flContainer))
                         .getViewPager().getCurrentItem() == 1) {
                     ((FollowingPostsFragment) fragmentManager.findFragmentById(R.id.flContainer).getChildFragmentManager()
-                            .findFragmentByTag("android:switcher:" + R.id.pager + ":" + 1)).updatePosts(post, position);
+                            .findFragmentByTag("android:switcher:" + R.id.materialviewpager_viewpager + ":" + 1)).updatePosts(post, position);
                 } else {
                     ((NearbyPostsFragment) fragmentManager.findFragmentById(R.id.flContainer).getChildFragmentManager()
-                            .findFragmentByTag("android:switcher:" + R.id.pager + ":" + 2)).updatePosts(post, position);
+                            .findFragmentByTag("android:switcher:" + R.id.materialviewpager_viewpager + ":" + 2)).updatePosts(post, position);
                 }
             }
 
