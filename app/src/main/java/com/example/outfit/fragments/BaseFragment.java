@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +49,7 @@ public abstract class BaseFragment extends Fragment {
     protected static List<Post> searchedPosts;
     public static List<Post> allFollowingPosts;
     public static List<Post> allNearbyPosts;
-    protected static SwipeRefreshLayout swipeContainer;
+    protected SwipeRefreshLayout swipeContainer;
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected EndlessRecyclerViewScrollListener scrollListenerForFollowing;
     protected EndlessRecyclerViewScrollListener scrollListenerForNearby;
@@ -105,15 +106,20 @@ public abstract class BaseFragment extends Fragment {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 Log.i(TAG, "onLoadMore!");
-                QueryPosts.loadNextData(page, false, null, null, adapter);
+                QueryPosts.loadNextData(page, false, null, null, adapter, swipeContainer);
             }
         };
         // Adds the scroll listener to RecyclerView
         rvPosts.addOnScrollListener(scrollListener);
+        Log.i(TAG, "queryMyPosts: " + swipeContainer.toString());
 
     }
 
     public abstract void queryMyPosts();
+
+    public SwipeRefreshLayout getSwipeContainer() {
+        return swipeContainer;
+    }
 
     public void updatePosts(Post post, int position) {
 

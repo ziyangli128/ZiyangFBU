@@ -49,7 +49,7 @@
 
                 <TextView
                     android:id="@+id/tvUsername"
-                    android:layout_width="270dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"

@@ -3,7 +3,9 @@ package com.example.outfit.helpers;
 import android.app.Activity;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 import android.widget.Adapter;
 
 import androidx.annotation.AnyThread;
@@ -13,6 +15,7 @@ import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.outfit.adapters.PostsAdapter;
 import com.example.outfit.fragments.BaseFragment;
@@ -41,7 +44,8 @@ public class QueryPosts extends BaseFragment {
     public static Date oldestMyPostCreatedAt;
 
     // query posts from the parse database
-    public static void queryPosts(@Nullable final Author author, final PostsAdapter postsAdapter) {
+    public static void queryPosts(@Nullable final Author author, final PostsAdapter postsAdapter,
+                                  final SwipeRefreshLayout swipeContainer) {
 
         new Thread(new Runnable() {
             @Override
@@ -79,7 +83,9 @@ public class QueryPosts extends BaseFragment {
                         }
                         postsAdapter.clear();
                         postsAdapter.addAll(posts);
-                        swipeContainer.setRefreshing(false);
+                        if (swipeContainer != null) {
+                            swipeContainer.setRefreshing(false);
+                        }
                     }
                 });
             }
@@ -89,7 +95,8 @@ public class QueryPosts extends BaseFragment {
     // Append the next page of data into the adapter
     public static void loadNextData(long page, final boolean loadSearch,
                                     @Nullable final String search, @Nullable final Author author,
-                                    final PostsAdapter postsAdapter) {
+                                    final PostsAdapter postsAdapter,
+                                    final SwipeRefreshLayout swipeContainer) {
         // specify the class to query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_AUTHOR);
@@ -142,7 +149,7 @@ public class QueryPosts extends BaseFragment {
         });
     }
 
-    public static void queryFollowingPosts(final PostsAdapter adapter) {
+    public static void queryFollowingPosts(final PostsAdapter adapter, final SwipeRefreshLayout swipeContainer) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -183,7 +190,9 @@ public class QueryPosts extends BaseFragment {
                         }
                         adapter.clear();
                         adapter.addAll(followingPosts);
-                        swipeContainer.setRefreshing(false);
+                        if (swipeContainer != null) {
+                            swipeContainer.setRefreshing(false);
+                        }
                         allFollowingPosts = new ArrayList<>(followingPosts);
                     }
                 });
@@ -230,7 +239,7 @@ public class QueryPosts extends BaseFragment {
                 if (followingPosts.isEmpty() && !posts.isEmpty()) {
                     loadNextDataForFollowing(adapter, false, null);
                 }
-                swipeContainer.setRefreshing(false);
+                //swipeContainer.setRefreshing(false);
                 allFollowingPosts.addAll(followingPosts);
 
                 if (!loadSearch) {
@@ -279,7 +288,7 @@ public class QueryPosts extends BaseFragment {
                         } else if (nearbyPosts.size() > begin){
                             adapter.addAll(nearbyPosts.subList(begin, nearbyPosts.size()));
                         }
-                        swipeContainer.setRefreshing(false);
+                        //swipeContainer.setRefreshing(false);
                         allNearbyPosts = new ArrayList<>(nearbyPosts);
                     }
                 });
@@ -324,7 +333,7 @@ public class QueryPosts extends BaseFragment {
         quickSort(posts, pivot+1, end);
     }
 
-    public static void queryFavoritePosts(PostsAdapter postsAdapter) {
+    public static void queryFavoritePosts(PostsAdapter postsAdapter, final SwipeRefreshLayout swipeContainer) {
         Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
         ArrayList favorites = currentUser.getFavorites();
         List<Post> favoritePosts = new ArrayList<>();
@@ -388,7 +397,7 @@ public class QueryPosts extends BaseFragment {
                     loadNextDataForFavorites(postsAdapter);
                 }
                 postsAdapter.addAll(favoritePosts);
-                swipeContainer.setRefreshing(false);
+                //swipeContainer.setRefreshing(false);
             }
         });
     }

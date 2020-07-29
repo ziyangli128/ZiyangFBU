@@ -70,13 +70,13 @@ public class PostsFragment extends BaseFragment {
                 switch (page) {
                     case 0:
                         return HeaderDesign.fromColorResAndDrawable(
-                                R.color.quantum_pink50, getResources().getDrawable(R.drawable.cover_home_1));
+                                R.color.main_menu, getResources().getDrawable(R.drawable.cover_home_1));
                     case 1:
                         return HeaderDesign.fromColorResAndDrawable(
-                                R.color.lime, getResources().getDrawable(R.drawable.cover_home_2));
+                                R.color.main_menu, getResources().getDrawable(R.drawable.cover_home_2));
                     case 2:
                         return HeaderDesign.fromColorResAndDrawable(
-                                R.color.cyan,getResources().getDrawable(R.drawable.cover_home_3));
+                                R.color.main_menu,getResources().getDrawable(R.drawable.cover_home_3));
                 }
                 return null;
             }

@@ -29,6 +29,7 @@ public class FollowingPostsFragment extends BaseFragment {
 
     private PostsAdapter followingAdapter;
     private List<Post> posts;
+    protected SwipeRefreshLayout.OnRefreshListener onRefreshListenerFollowing;
 
     public FollowingPostsFragment() {}
 
@@ -53,6 +54,7 @@ public class FollowingPostsFragment extends BaseFragment {
 
         rvPosts.setAdapter(followingAdapter);
         MaterialViewPagerHelper.registerScrollView(getContext(), svPosts);
+        MaterialViewPagerHelper.registerRecyclerView(getContext(), rvPosts);
 
         scrollListenerForFollowing = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -64,13 +66,24 @@ public class FollowingPostsFragment extends BaseFragment {
         rvPosts.clearOnScrollListeners();
         rvPosts.addOnScrollListener(scrollListenerForFollowing);
 
+        // Setup refresh listener which triggers new data loading
+        onRefreshListenerFollowing = new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i(TAG, "onRefresh: fetching new data!");
+                followingAdapter.clear();
+                queryMyPosts();
+            }
+        };
+        swipeContainer.setOnRefreshListener(onRefreshListenerFollowing);
+
         setOnSearchPosts(followingAdapter);
         setOnGoBackHome(followingAdapter, scrollListenerForFollowing);
     }
 
     @Override
     public void queryMyPosts() {
-        QueryPosts.queryFollowingPosts(followingAdapter);
+        QueryPosts.queryFollowingPosts(followingAdapter, swipeContainer);
     }
 
     private void setOnSearchPosts(final PostsAdapter adapter) {

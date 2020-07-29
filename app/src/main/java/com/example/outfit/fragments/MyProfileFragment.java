@@ -83,7 +83,7 @@ public class MyProfileFragment extends ProfileFragment {
                     case 1:
                         rvProfilePosts.clearOnScrollListeners();
                         rvProfilePosts.smoothScrollToPosition(0);
-                        QueryPosts.queryFavoritePosts(profileAdapter);
+                        QueryPosts.queryFavoritePosts(profileAdapter, swipeContainer);
                         swipeContainer.setEnabled(false);
                         break;
                 }

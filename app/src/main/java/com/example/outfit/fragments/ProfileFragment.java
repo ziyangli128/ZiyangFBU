@@ -105,7 +105,8 @@ public class ProfileFragment extends Fragment {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 Log.i(TAG, "onLoadMore for profile posts!");
-                QueryPosts.loadNextData(page, false, null, author, profileAdapter);
+                QueryPosts.loadNextData(page, false, null, author,
+                        profileAdapter, swipeContainer);
             }
         };
         // Adds the scroll listener to RecyclerView
@@ -157,7 +158,7 @@ public class ProfileFragment extends Fragment {
     }
 
     public void queryMyPosts() {
-        QueryPosts.queryPosts(author, profileAdapter);
+        QueryPosts.queryPosts(author, profileAdapter, swipeContainer);
     }
 
     public void updatePosts(Post post, int position) {

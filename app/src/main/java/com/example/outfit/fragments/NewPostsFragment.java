@@ -51,10 +51,13 @@ public class NewPostsFragment extends BaseFragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //rvPosts.addItemDecoration(new MaterialViewPagerHeaderDecorator());
+        posts = new ArrayList<>();
+        adapter = new PostsAdapter(getContext(), posts);
+        queryMyPosts();
+
         rvPosts.setAdapter(adapter);
         MaterialViewPagerHelper.registerScrollView(getContext(), svPosts);
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(), rvPosts);
+        MaterialViewPagerHelper.registerRecyclerView(getContext(), rvPosts);
 
         setOnSearchPosts(adapter);
         setOnGoBackHome(adapter, scrollListener);
@@ -62,7 +65,7 @@ public class NewPostsFragment extends BaseFragment {
 
     @Override
     public void queryMyPosts() {
-        QueryPosts.queryPosts(null, adapter);
+        QueryPosts.queryPosts(null, adapter, swipeContainer);
     }
 
     private void setOnSearchPosts(final PostsAdapter adapter) {
@@ -96,7 +99,8 @@ public class NewPostsFragment extends BaseFragment {
                             // Triggered only when new data needs to be appended to the list
                             // Add whatever code is needed to append new items to the bottom of the list
                             Log.i(TAG, "onLoadMore for search!");
-                            QueryPosts.loadNextData(page, true, s, null, adapter);
+                            QueryPosts.loadNextData(page, true, s, null,
+                                    adapter, swipeContainer);
                         }
                     };
 
@@ -144,7 +148,6 @@ public class NewPostsFragment extends BaseFragment {
 
     @Override
     public void updatePosts(Post post, int position) {
-        Log.i(TAG, "updatePosts: agdgsdgsdgsdfg");
         posts.remove(position);
         posts.add(position, post);
         adapter.notifyDataSetChanged();

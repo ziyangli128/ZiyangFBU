@@ -54,6 +54,7 @@ public class NearbyPostsFragment extends BaseFragment {
 
         rvPosts.setAdapter(nearbyAdapter);
         MaterialViewPagerHelper.registerScrollView(getContext(), svPosts);
+        MaterialViewPagerHelper.registerRecyclerView(getContext(), rvPosts);
 
         scrollListenerForNearby = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
