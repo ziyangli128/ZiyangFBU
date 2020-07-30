@@ -1,12 +1,18 @@
 package com.example.outfit.helpers;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.outfit.activities.MapsActivity;
+import com.example.outfit.fragments.MapDetailFragment;
 import com.example.outfit.models.Place;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -23,6 +29,7 @@ import okhttp3.Headers;
 
 public class GetApiRequests {
     static List<Place> places;
+    static Context context;
 
     public static void getPlacesRequest(final GoogleMap map, final String TAG, Activity activity) {
         ArrayList brands = activity.getIntent().getStringArrayListExtra("brand");
@@ -71,7 +78,8 @@ public class GetApiRequests {
 
 
     static Place markedPlace;
-    public static Place getPlacesDetailRequest(LatLng position, final String TAG, final Context context) {
+    public static Place getPlacesDetailRequest(LatLng position, final String TAG, final Context context,
+                                               final FragmentManager fm) {
         String placeId = null;
 
         for (Place place: places) {
@@ -110,12 +118,7 @@ public class GetApiRequests {
                     Log.e(TAG, "Hit json exception", e);
                     e.printStackTrace();
                 }
-                Toast.makeText(context, markedPlace.getName() + "\n"
-                                + markedPlace.getFormattedAddress() + "\n"
-                                + "Phone: " + markedPlace.getFormattedPhoneNumber() + "\n"
-                                + "Rating: " + markedPlace.getRating() + "\n"
-                                + "Website: " + markedPlace.getWebsite() + "\n",
-                        Toast.LENGTH_LONG).show();
+                MapsActivity.showEditDialog(markedPlace, fm);
             }
 
             @Override
@@ -125,4 +128,11 @@ public class GetApiRequests {
         });
         return markedPlace;
     }
+
+//    private static void showEditDialog(Place placeInDetail) {
+//
+//        FragmentManager fm = ((AppCompatActivity) context).getSupportFragmentManager();
+//        MapDetailFragment mapDetailFragment = MapDetailFragment.newInstance("Some Title", placeInDetail);
+//        mapDetailFragment.show(fm, "fragment_map_detail");
+//    }
 }

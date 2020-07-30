@@ -12,10 +12,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.outfit.R;
+import com.example.outfit.fragments.AddTagFragment;
+import com.example.outfit.fragments.ComposeFragment;
+import com.example.outfit.fragments.MapDetailFragment;
 import com.example.outfit.helpers.GetApiRequests;
 import com.example.outfit.models.Place;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -42,6 +46,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Headers;
 import permissions.dispatcher.NeedsPermission;
@@ -243,9 +248,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng latLng = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, storeZoomRadius);
         map.animateCamera(cameraUpdate);
-        Place placeInDetail = GetApiRequests.getPlacesDetailRequest(latLng, TAG, getApplicationContext());
+        FragmentManager fm = getSupportFragmentManager();
+        Place placeInDetail = GetApiRequests.getPlacesDetailRequest(latLng, TAG,
+                getApplicationContext(), fm);
+
         return true;
     }
 
+    public static void showEditDialog(Place placeInDetail, FragmentManager fm) {
 
+
+        MapDetailFragment mapDetailFragment = MapDetailFragment.newInstance("Some Title", placeInDetail);
+        mapDetailFragment.show(fm, "fragment_map_detail");
+    }
 }
