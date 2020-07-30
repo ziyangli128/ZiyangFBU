@@ -158,6 +158,13 @@ public class ClickListener {
                     post.removeLikes(ParseUser.getCurrentUser().getObjectId());
                     post.saveInBackground();
                     ivLike.setSelected(false);
+
+                    new ParticleSystem((Activity) context, 80,
+                            R.drawable.ic_broken_heart, 10000)
+                            .setSpeedModuleAndAngleRange(0.5f, 0.5f, 0, 360)
+                            .setRotationSpeed(144)
+                            .setAcceleration(0.00005f, 90)
+                            .oneShot(ivImage, 16);
                 } else {
                     post.setLikes(ParseUser.getCurrentUser().getObjectId());
                     post.saveInBackground();

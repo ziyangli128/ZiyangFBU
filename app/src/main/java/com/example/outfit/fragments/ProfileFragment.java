@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -50,6 +52,8 @@ public class ProfileFragment extends Fragment {
     protected TextView tvFollowerNum;
     protected TextView tvFavoritesNum;
     private Button btnFollow;
+    protected LinearLayout llFollowings;
+    protected LinearLayout llFollowers;
     private FragmentProfileBinding binding;
     protected RecyclerView rvProfilePosts;
     protected PostsAdapter profileAdapter;
@@ -92,6 +96,8 @@ public class ProfileFragment extends Fragment {
         tvFollowerNum = view.findViewById(R.id.tvFollowerNum);
         tvFavoritesNum = view.findViewById(R.id.tvFavoritesNum);
         btnFollow = view.findViewById(R.id.btnFollow);
+        llFollowings = view.findViewById(R.id.llFollowings);
+        llFollowers = view.findViewById(R.id.llFollowers);
 
         rvProfilePosts = view.findViewById(R.id.rvProfilePosts);
         rvProfilePosts.setAdapter(profileAdapter);
@@ -155,6 +161,20 @@ public class ProfileFragment extends Fragment {
 
             ClickListener.setbtnFollowClickListener(author, binding.btnFollow, TAG);
         }
+
+        llFollowings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showEditDialog(author.getFollowings());
+            }
+        });
+
+        llFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showEditDialog(author.getFollowers());
+            }
+        });
     }
 
     public void queryMyPosts() {
@@ -165,5 +185,14 @@ public class ProfileFragment extends Fragment {
         posts.remove(position);
         posts.add(position, post);
         profileAdapter.notifyDataSetChanged();
+    }
+
+    protected void showEditDialog(ArrayList userIDs) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FollowListFragment followListFragment =
+                FollowListFragment.newInstance("some title", userIDs);
+        // SETS the target fragment for use later when sending results
+        // addTagFragment.setTargetFragment(ComposeFragment.this, 300);
+        followListFragment.show(fm, "fragment_follow_list");
     }
 }
