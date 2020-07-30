@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.outfit.R;
 import com.example.outfit.databinding.FragmentAddTagBinding;
@@ -77,7 +78,12 @@ public class AddTagFragment extends DialogFragment {
                 addTag(binding.chipStreet);
                 addTag(binding.chipTomboy);
                 addTag(binding.chipVintage);
-                sendBackResult();
+
+                if (tags.size() > 4) {
+                    Toast.makeText(getContext(), R.string.tags_limit, Toast.LENGTH_SHORT).show();
+                } else {
+                    sendBackResult();
+                }
             }
         });
     }

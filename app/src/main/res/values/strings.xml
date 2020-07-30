@@ -48,6 +48,7 @@
 
 
     <string name="choose_tag">Please choose at least one tag from below.</string>
+    <string name="tags_limit">You can only add up to 4 tags!</string>
     <string name="chip_artsy">Artsy</string>
     <string name="chip_bohemian">Bohemian</string>
     <string name="chip_casual">Casual</string>

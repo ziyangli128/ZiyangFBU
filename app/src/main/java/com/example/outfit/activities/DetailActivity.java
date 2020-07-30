@@ -43,8 +43,6 @@ public class DetailActivity extends AppCompatActivity{
 
     public static final String TAG = "DetailActivity";
     ActivityDetailBinding binding;
-    public static final int CORNER_RADIUS = 150; // corner radius, higher value = more rounded
-    public static final int CROP_MARGIN = 10; // crop margin, set to 0 for corners with no crop
     public static final String KEY_FOLLOWERS = "followers";
     public static final String KEY_FOLLOWINGS = "followings";
 
@@ -90,7 +88,7 @@ public class DetailActivity extends AppCompatActivity{
         }
         if (profileImage != null) {
             Glide.with(this).load(profileImage.getUrl())
-                    .transform(new RoundedCornersTransformation(CORNER_RADIUS, CROP_MARGIN)).into(binding.ivProfileImage);
+                    .circleCrop().into(binding.ivProfileImage);
         }
 
         ArrayList followers = ((ArrayList) post.getAuthor().get(KEY_FOLLOWERS));
@@ -127,15 +125,32 @@ public class DetailActivity extends AppCompatActivity{
             Glide.with(this).load(image.getUrl()).into(binding.ivImage);
         }
 
-        Log.i(TAG, "bindBody: ");
-
         final ArrayList brand = post.getBrand();
+        final ArrayList tags = post.getTags();
 
         binding.tvTitle.setText(post.getTitle());
-        binding.tvDescription.setText(post.getDescription());
+        binding.tvDescription.setText("Description: " + post.getDescription());
         binding.tvCreatedAt.setText(post.getCreatedAt().toString());
-        if (brand != null) {
+        if (brand != null && !brand.get(0).toString().isEmpty()) {
             binding.tvBrand.setText("Brand: " + post.getBrand().get(0).toString());
+        } else {
+            binding.tvBrand.setVisibility(View.GONE);
+            binding.btnMap.setVisibility(View.GONE);
+        }
+
+        for (int i = 0; i < tags.size(); ++i) {
+            if (i == 0) {
+                binding.tvTag1.setText(tags.get(0).toString());
+            } else if (i == 1) {
+                binding.tvTag2.setVisibility(View.VISIBLE);
+                binding.tvTag2.setText(tags.get(1).toString());
+            } else if (i == 2) {
+                binding.tvTag3.setVisibility(View.VISIBLE);
+                binding.tvTag3.setText(tags.get(2).toString());
+            } else if (i == 3) {
+                binding.tvTag4.setVisibility(View.VISIBLE);
+                binding.tvTag4.setText(tags.get(3).toString());
+            }
         }
 
         binding.btnMap.setOnClickListener(new View.OnClickListener() {

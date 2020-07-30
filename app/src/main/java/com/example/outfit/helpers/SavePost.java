@@ -39,7 +39,9 @@ public class SavePost extends ComposeFragment {
         Post post = new Post();
         post.setTitle(title);
         post.setDescription(description);
-        post.setBrand(brand);
+        if (!brand.isEmpty()) {
+            post.setBrand(brand);
+        }
         if (photoFile != null) {
             post.setImage(new ParseFile(photoFile));
         } else {

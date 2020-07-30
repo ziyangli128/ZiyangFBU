@@ -108,6 +108,7 @@ public class ClickListener {
 
     public static void setbtnFollowClickListener(final Author author, final Button btnfollow, final String TAG) {
         btnfollow.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
                 Author currentUser = (Author) ParseUser.getCurrentUser().getParseObject("author");
@@ -121,6 +122,7 @@ public class ClickListener {
                     author.removeAll(KEY_FOLLOWERS, Collections.singleton(currentUser.getObjectId()));
                     author.saveInBackground();
                     btnfollow.setText(R.string.follow);
+                    //btnfollow.setTextColor(R.color.main_theme);
                 } else {
                     currentUser.add(KEY_FOLLOWINGS, author.getObjectId());
                     currentUser.saveInBackground();
@@ -128,6 +130,7 @@ public class ClickListener {
                     author.add(KEY_FOLLOWERS, currentUser.getObjectId());
                     author.saveInBackground();
                     btnfollow.setText(R.string.unfollow);
+                    //btnfollow.setTextColor(R.color.green);
                 }
             }
         });
