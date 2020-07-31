@@ -256,8 +256,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public static void showEditDialog(Place placeInDetail, FragmentManager fm) {
-
-
         MapDetailFragment mapDetailFragment = MapDetailFragment.newInstance("Some Title", placeInDetail);
         mapDetailFragment.show(fm, "fragment_map_detail");
     }

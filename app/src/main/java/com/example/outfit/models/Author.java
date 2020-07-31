@@ -1,9 +1,11 @@
 package com.example.outfit.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -17,6 +19,7 @@ public class Author extends ParseObject {
     public static final String KEY_FOLLOWERS = "followers";
     public static final String KEY_FOLLOWINGS = "followings";
     public static final String KEY_USERNAME = "username";
+    public static final String KEY_PROFILE_IMAGE = "profileImage";
 
     public ArrayList getFavorites() {
         return (ArrayList) get(KEY_FAVORITES);
@@ -60,5 +63,13 @@ public class Author extends ParseObject {
 
     public void setUsername(String username) {
         put(KEY_USERNAME, username);
+    }
+
+    public ParseFile getProfileImage() {
+        return (ParseFile) get(KEY_PROFILE_IMAGE);
+    }
+
+    public void setProfileImage(ParseFile profileImage) {
+        put(KEY_PROFILE_IMAGE, profileImage);
     }
 }

@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
+    public final static int PICK_PHOTO_CODE = 1046;
 
     ActivityMainBinding binding;
     Fragment fragment;
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == RESULT_OK
+        if (resultCode == RESULT_OK && requestCode != PICK_PHOTO_CODE
                 && !fragmentManager.findFragmentById(R.id.flContainer).toString().contains("ComposeFragment") ) {
             // Get data from the Intent (update post)
             Post post = Parcels.unwrap(data.getParcelableExtra("post"));
@@ -94,7 +95,9 @@ public class MainActivity extends AppCompatActivity {
             // Modify data source of posts
             // Update the adapter
             if (fragmentManager.findFragmentById(R.id.flContainer).toString().contains("ProfileFragment")) {
-                ((ProfileFragment) fragmentManager.findFragmentById(R.id.flContainer)).updatePosts(post, position);
+                if (post != null) {
+                    ((ProfileFragment) fragmentManager.findFragmentById(R.id.flContainer)).updatePosts(post, position);
+                }
             } else {
                 if (((PostsFragment)fragmentManager.findFragmentById(R.id.flContainer))
                         .getViewPager().getCurrentItem() == 0) {
@@ -111,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

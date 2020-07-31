@@ -23,6 +23,7 @@ import com.example.outfit.models.Place;
 import com.example.outfit.models.Post;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
@@ -79,13 +80,8 @@ public class DetailActivity extends AppCompatActivity{
     public void bindTopToolBar() {
         binding.tvUsername.setText(post.getAuthorUsername());
 
-        ParseUser user = post.getAuthor().getParseUser("user");
-        ParseFile profileImage = null;
-        try {
-            profileImage = user.fetchIfNeeded().getParseFile("profileImage");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        ParseObject author = post.getAuthor();
+        ParseFile profileImage = author.getParseFile("profileImage");
         if (profileImage != null) {
             Glide.with(this).load(profileImage.getUrl())
                     .circleCrop().into(binding.ivProfileImage);

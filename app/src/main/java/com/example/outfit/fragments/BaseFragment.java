@@ -111,8 +111,6 @@ public abstract class BaseFragment extends Fragment {
         };
         // Adds the scroll listener to RecyclerView
         rvPosts.addOnScrollListener(scrollListener);
-        Log.i(TAG, "queryMyPosts: " + swipeContainer.toString());
-
     }
 
     public abstract void queryMyPosts();

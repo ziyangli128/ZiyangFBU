@@ -38,8 +38,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     public static final String TAG = "PostsAdapter";
     private final int REQUEST_CODE = 20;
-    public static final int CORNER_RADIUS = 150; // corner radius, higher value = more rounded
-    public static final int CROP_MARGIN = 10; // crop margin, set to 0 for corners with no crop
 
     private Context context;
     private List<Post> posts;
@@ -112,8 +110,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ParseObject author = post.getAuthor();
             ParseFile profileImage = author.getParseFile("profileImage");
             if (profileImage != null) {
-                Glide.with(context).load(profileImage.getUrl())
-                        .transform(new RoundedCornersTransformation(CORNER_RADIUS, CROP_MARGIN)).into(ivProfile);
+                Glide.with(context).load(profileImage.getUrl()).circleCrop().into(ivProfile);
             }
 
             if (post.getLikes().contains(ParseUser.getCurrentUser().getObjectId())) {

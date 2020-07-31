@@ -39,8 +39,6 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 public class ProfileFragment extends Fragment {
 
     public static final String TAG = "ProfileFragment";
-    public static final int CORNER_RADIUS = 150; // corner radius, higher value = more rounded
-    public static final int CROP_MARGIN = 10; // crop margin, set to 0 for corners with no crop
     public static final String KEY_FAVORITES = "collection";
     public static final String KEY_FOLLOWERS = "followers";
     public static final String KEY_FOLLOWINGS = "followings";
@@ -60,7 +58,7 @@ public class ProfileFragment extends Fragment {
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected static SwipeRefreshLayout swipeContainer;
     protected SwipeRefreshLayout.OnRefreshListener onRefreshListener;
-    protected List<Post> posts;
+    protected static List<Post> posts;
 
     protected Author author;
 
@@ -149,7 +147,7 @@ public class ProfileFragment extends Fragment {
 
         ParseFile profileImage = author.getParseFile("profileImage");
         Glide.with(getContext()).load(profileImage.getUrl())
-                .transform(new RoundedCornersTransformation(CORNER_RADIUS, CROP_MARGIN)).into(ivProfileImage);
+                .circleCrop().into(ivProfileImage);
 
         if (btnFollow != null) {
             ArrayList followers = ((ArrayList) author.get(KEY_FOLLOWERS));
