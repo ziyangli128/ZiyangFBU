@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Outfit</string>
+    <string name="app_name">OOTD</string>
     <string name="google_maps_api_key">AIzaSyCDL3qjAsZGFncXeN7PogP4nC-tY3xLZJ8</string>
 
     <string name="login">Log in</string>
