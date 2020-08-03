@@ -17,9 +17,9 @@
 
     <string name="title_hint">Title...</string>
     <string name="description_hint">Description...</string>
-    <string name="brand_hint">Add brand (optional)</string>
+    <string name="brand_hint">Add a brand...</string>
     <string name="add_tag">Add Tag</string>
-    <string name="select_from_gallery">Select a picture from album.</string>
+    <string name="select_from_gallery">Select from album</string>
     <string name="submit_post">Submit</string>
     <string name="title_empty">Title cannot be empty!</string>
     <string name="image_empty">Please uplaod an image!</string>

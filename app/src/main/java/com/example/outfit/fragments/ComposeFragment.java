@@ -69,6 +69,8 @@ public class ComposeFragment extends Fragment implements AddTagFragment.AddTagDi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        binding.tvTags.setVisibility(View.INVISIBLE);
+
         binding.ivPostImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -240,6 +242,7 @@ public class ComposeFragment extends Fragment implements AddTagFragment.AddTagDi
     @Override
     public void onFinishAddTag(ArrayList tags) {
         Log.i(TAG, "onFinishAddTag: " + tags.toString());
+        binding.tvTags.setVisibility(View.VISIBLE);
         binding.tvTags.setText("Tags: ");
         for (Object tag: tags) {
             binding.tvTags.append(tag + " ");

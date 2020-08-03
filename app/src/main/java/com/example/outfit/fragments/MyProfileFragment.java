@@ -140,12 +140,6 @@ public class MyProfileFragment extends ProfileFragment {
         startActivity(i);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume: sfsfsd " + profileAdapter.getItemCount() + " " + posts.size());
-    }
-
     // Trigger gallery selection for a photo
     public void launchGallery(View view) {
         // Create intent for picking a photo from the gallery

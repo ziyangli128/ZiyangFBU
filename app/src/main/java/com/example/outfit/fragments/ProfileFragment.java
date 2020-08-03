@@ -48,7 +48,6 @@ public class ProfileFragment extends Fragment {
     protected TextView tvUsername;
     protected TextView tvFollowingNum;
     protected TextView tvFollowerNum;
-    protected TextView tvFavoritesNum;
     private Button btnFollow;
     protected LinearLayout llFollowings;
     protected LinearLayout llFollowers;
@@ -92,7 +91,6 @@ public class ProfileFragment extends Fragment {
         tvUsername = view.findViewById(R.id.tvUsername);
         tvFollowingNum = view.findViewById(R.id.tvFollowingNum);
         tvFollowerNum = view.findViewById(R.id.tvFollowerNum);
-        tvFavoritesNum = view.findViewById(R.id.tvFavoritesNum);
         btnFollow = view.findViewById(R.id.btnFollow);
         llFollowings = view.findViewById(R.id.llFollowings);
         llFollowers = view.findViewById(R.id.llFollowers);
@@ -140,9 +138,6 @@ public class ProfileFragment extends Fragment {
         }
         if (((author.getFollowers()) != null)) {
             tvFollowerNum.setText((author.getFollowers()).size()+ "");
-        }
-        if ((author.getFavorites()) != null) {
-            tvFavoritesNum.setText((author.getFavorites()).size() + "");
         }
 
         ParseFile profileImage = author.getParseFile("profileImage");

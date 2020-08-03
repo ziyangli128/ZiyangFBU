@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
-    android:orientation="vertical">
+    android:background="@color/main_menu"
+    android:orientation="vertical"
+    android:padding="20dp">
 
 
     <TextView
@@ -175,6 +176,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
+        android:backgroundTint="#FFFFFF"
         android:text="@string/add_tag"
         android:textColor="#000000" />
 

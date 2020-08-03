@@ -4,86 +4,113 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="20dp"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context=".fragments.ComposeFragment">
 
-    <ImageView
-        android:id="@+id/ivPostImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="50dp"
-        app:srcCompat="@drawable/ic_compose_selector" />
-
-    <EditText
-        android:id="@+id/etTitle"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginBottom="10dp"
-        android:ems="10"
-        android:hint="@string/title_hint" />
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/etDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginBottom="10dp"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        android:hint="@string/description_hint" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etBrand"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginBottom="10dp"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        android:hint="@string/brand_hint" />
+            <ImageView
+                android:id="@+id/ivPostImage"
+                android:layout_width="204dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="20dp"
+                app:srcCompat="@drawable/add_image_dashed" />
 
-    <TextView
-        android:id="@+id/tvTags"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="50dp"
-        android:textStyle="italic"
-        tools:text="Tags" />
+            <EditText
+                android:id="@+id/etTitle"
+                style="@style/Widget.AppCompat.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:hint="@string/title_hint" />
 
-    <Button
-        android:id="@+id/btnAccessGallery"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/select_from_gallery"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            <EditText
+                android:id="@+id/etDescription"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:hint="@string/description_hint"
+                android:inputType="textMultiLine" />
 
-    <Button
-        android:id="@+id/btnAddBrand"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/add_tag"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            <EditText
+                android:id="@+id/etBrand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:hint="@string/brand_hint"
+                android:inputType="textMultiLine" />
 
-    <Button
-        android:id="@+id/btnSubmit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:text="@string/submit_post"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            <TextView
+                android:id="@+id/tvTags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="10dp"
+                android:textStyle="italic"
+                tools:text="Tags" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnAccessGallery"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#FFFFFF"
+                    android:text="@string/select_from_gallery"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+                <Button
+                    android:id="@+id/btnAddBrand"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:backgroundTint="#FFFFFF"
+                    android:text="@string/add_tag"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="240dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="false"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/main_theme"
+                android:text="@string/submit_post"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </LinearLayout>
