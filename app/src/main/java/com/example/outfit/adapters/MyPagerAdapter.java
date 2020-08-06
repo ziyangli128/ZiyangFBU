@@ -14,9 +14,12 @@ import com.example.outfit.fragments.NewPostsFragment;
 import com.example.outfit.fragments.PostsFragment;
 
 public class MyPagerAdapter extends FragmentPagerAdapter {
+    public static final String TAG = "pageradapter";
+
 
     public MyPagerAdapter(@NonNull FragmentManager fm) {
         super(fm);
+
     }
 
     @NonNull

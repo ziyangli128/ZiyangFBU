@@ -1,9 +1,11 @@
 package com.example.outfit.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +30,6 @@ public class PostsFragment extends BaseFragment {
     protected static List<Post> allPosts;
 
     MyPagerAdapter pagerAdapter;
-    //ViewPager viewPager;
     MaterialViewPager viewPager;
 
     public PostsFragment() {
@@ -37,13 +38,13 @@ public class PostsFragment extends BaseFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        pagerAdapter = new MyPagerAdapter(getChildFragmentManager());
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_posts, container, false);
     }
 
@@ -51,17 +52,10 @@ public class PostsFragment extends BaseFragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         //super.onViewCreated(view, savedInstanceState);
 
-        pagerAdapter = new MyPagerAdapter(getChildFragmentManager());
-        //viewPager = view.findViewById(R.id.pager);
         viewPager = view.findViewById(R.id.materialViewPager);
         ViewPager pager = viewPager.getViewPager();
         pager.setAdapter(pagerAdapter);
         viewPager.getToolbar().setVisibility(View.GONE);
-
-
-//        TabLayout tabLayout = view.findViewById(R.id.tabTimeline);
-//        tabLayout.setupWithViewPager(pager);
-
         viewPager.getPagerTitleStrip().setViewPager(viewPager.getViewPager());
 
         viewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
@@ -82,6 +76,8 @@ public class PostsFragment extends BaseFragment {
             }
         });
 
+//        TabLayout tabLayout = view.findViewById(R.id.tabTimeline);
+//        tabLayout.setupWithViewPager(pager);
     }
 
     @Override
@@ -91,5 +87,4 @@ public class PostsFragment extends BaseFragment {
     public ViewPager getViewPager() {
         return viewPager.getViewPager();
     }
-
 }

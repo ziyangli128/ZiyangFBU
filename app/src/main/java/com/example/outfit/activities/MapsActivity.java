@@ -132,6 +132,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onSuccess(Location location) {
                         if (location != null) {
                             onLocationChanged(location);
+                            Log.i(TAG, "onSuccess: " + location.toString());
                             Toast.makeText(getApplicationContext(), "GPS location was found!", Toast.LENGTH_SHORT).show();
                             LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoomRadius);

@@ -67,7 +67,7 @@ public class MapDetailFragment extends DialogFragment {
 
         binding.tvPlaceName.setText(place.getName());
         binding.tvPlaceAddress.setText("Address: " + place.getFormattedAddress());
-        binding.tvPlacePhone.setText("Phone number: " + place.getFormattedPhoneNumber());
+        binding.tvPlacePhone.setText("Phone: " + place.getFormattedPhoneNumber());
         binding.tvPlaceRating.setText("Rating: " + place.getRating());
         binding.tvPlaceWebsite.setText("Website: " + place.getWebsite());
     }

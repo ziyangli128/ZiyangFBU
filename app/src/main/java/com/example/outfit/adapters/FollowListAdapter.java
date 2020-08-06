@@ -39,8 +39,6 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class FollowListAdapter extends RecyclerView.Adapter<FollowListAdapter.ViewHolder>  {
     public static final String TAG = "FollowListAdapter";
-    public static final int CORNER_RADIUS = 150; // corner radius, higher value = more rounded
-    public static final int CROP_MARGIN = 10; // crop margin, set to 0 for corners with no crop
 
     private Context context;
     private List<Author> users;
@@ -98,7 +96,7 @@ public class FollowListAdapter extends RecyclerView.Adapter<FollowListAdapter.Vi
             ParseFile profileImage = user.getParseFile("profileImage");
             if (profileImage != null) {
                 Glide.with(context).load(profileImage.getUrl())
-                        .transform(new RoundedCornersTransformation(CORNER_RADIUS, CROP_MARGIN))
+                        .circleCrop()
                         .into(ivProfileImage);
             }
         }

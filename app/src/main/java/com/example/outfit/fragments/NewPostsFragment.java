@@ -51,10 +51,6 @@ public class NewPostsFragment extends BaseFragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        posts = new ArrayList<>();
-        adapter = new PostsAdapter(getContext(), posts);
-        queryMyPosts();
-
         rvPosts.setAdapter(adapter);
         MaterialViewPagerHelper.registerScrollView(getContext(), svPosts);
         MaterialViewPagerHelper.registerRecyclerView(getContext(), rvPosts);
